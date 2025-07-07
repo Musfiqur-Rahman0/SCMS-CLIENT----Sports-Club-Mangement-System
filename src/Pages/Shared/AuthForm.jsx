@@ -18,8 +18,12 @@ function AuthFormBase({
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm();
+
+  // const photo = watch("photo");
+  // console.log(photo);
 
   return (
     <form

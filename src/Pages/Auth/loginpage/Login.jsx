@@ -1,14 +1,20 @@
+import useAuth from "@/Hooks/useAuth";
 import { AuthForm } from "@/Pages/Shared/AuthForm";
 import React from "react";
+import { useNavigate } from "react-router";
 
 const Login = () => {
+  const { loginWithGoogle, login } = useAuth();
+  const navigate = useNavigate();
   const handleLogin = (data) => {
-    console.log("Login Data", data);
+    const { email, password } = data;
+    login(email, password);
     // TODO: Call your login API here
   };
 
   const handleGoogleLogin = () => {
-    console.log("Login with Google");
+    loginWithGoogle();
+    navigate("/");
     // TODO: Google auth here
   };
 
