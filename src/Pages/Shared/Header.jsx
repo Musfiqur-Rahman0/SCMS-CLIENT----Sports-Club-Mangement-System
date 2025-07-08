@@ -7,12 +7,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
 import { use, useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "framer-motion"; // fix: correct import
+
 import useAuth from "@/Hooks/useAuth";
 
 export default function Header() {
+  const { isLoading } = use(AuthContext);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -28,7 +31,6 @@ export default function Header() {
     <header className="flex justify-between items-center p-4 shadow-md bg-white">
       {/* Logo + Site Name */}
       <Link to="/" className="flex items-center space-x-2">
-        {/* <img src="/logo.svg" alt="Logo" className="h-8 w-8" /> */}
         <span className="text-xl font-bold">SCMS</span>
       </Link>
 
@@ -41,7 +43,10 @@ export default function Header() {
           Courts
         </Link>
 
-        {!user ? (
+        {isLoading ? (
+          // Skeleton while loading
+          <Skeleton className="h-10 w-10 rounded-full animate-pulse" />
+        ) : !user ? (
           <Link to="/login">
             <Button variant="outline">Login</Button>
           </Link>
@@ -50,15 +55,15 @@ export default function Header() {
             <DropdownMenuTrigger asChild>
               <Avatar
                 onClick={toggleDropdown}
-                className="cursor-pointer transition-shadow hover:shadow-lg"
+                className="cursor-pointer transition-shadow hover:shadow-lg hover:rounded-full"
               >
                 <AvatarImage
-                  src={user.photoURL || ""}
-                  alt={user.name || "Profile"}
-                  className="h-10 w-10 rounded-full object-contain"
+                  src={user?.photoURL}
+                  alt={user?.name}
+                  className="h-10 w-10 rounded-full object-cover"
                 />
                 <AvatarFallback>
-                  {user.name ? user.name.charAt(0) : "U"}
+                  {user.displayName ? user.displayName.charAt(0) : "U"}
                 </AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
@@ -73,11 +78,8 @@ export default function Header() {
                     transition={{ duration: 0.2 }}
                     className="p-2"
                   >
-                    <div className="px-2 py-1 text-sm text-gray-700">
-                      {user.name} <br />
-                      <span className="text-xs text-gray-500">
-                        {user.email}
-                      </span>
+                    <div className=" py-1 text-sm text-gray-700">
+                      {user.displayName}
                     </div>
                     <DropdownMenuItem asChild>
                       <Link to="/dashboard" className="w-full">
