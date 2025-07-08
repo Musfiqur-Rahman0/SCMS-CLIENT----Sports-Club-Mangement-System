@@ -1,35 +1,99 @@
+import { Button } from "@/components/ui/button";
+import { AuthContext } from "@/Context/AuthContext";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
+import { use, useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { AnimatePresence, motion } from "motion/react";
+import useAuth from "@/Hooks/useAuth";
 
-export default function Header({ user }) {
+export default function Header() {
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => setIsOpen(!isOpen);
+
+  const onLogout = () => {
+    logout();
+  };
+
   return (
-    <nav className="flex justify-between items-center px-8 py-4 bg-white shadow">
-      <Link to="/" className="text-xl font-bold">
-        🏆 SCMS
+    <header className="flex justify-between items-center p-4 shadow-md bg-white">
+      {/* Logo + Site Name */}
+      <Link to="/" className="flex items-center space-x-2">
+        {/* <img src="/logo.svg" alt="Logo" className="h-8 w-8" /> */}
+        <span className="text-xl font-bold">SCMS</span>
       </Link>
 
-      <div className="flex gap-4 items-center">
-        <Link to="/">Home</Link>
-        <Link to="/courts">Courts</Link>
-        {user ? (
-          <div className="relative">
-            <img
-              src={user.photoURL}
-              alt="profile"
-              className="w-8 h-8 rounded-full cursor-pointer"
-              onClick={() => navigate("/dashboard")}
-            />
-          </div>
-        ) : (
-          <Link
-            to="/login"
-            className="bg-blue-500 text-white px-3 py-1 rounded"
-          >
-            Login
+      {/* Navigation Links */}
+      <nav className="flex items-center space-x-4">
+        <Link to="/" className="text-gray-700 hover:text-black">
+          Home
+        </Link>
+        <Link to="/courts" className="text-gray-700 hover:text-black">
+          Courts
+        </Link>
+
+        {!user ? (
+          <Link to="/login">
+            <Button variant="outline">Login</Button>
           </Link>
+        ) : (
+          <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+            <DropdownMenuTrigger asChild>
+              <Avatar
+                onClick={toggleDropdown}
+                className="cursor-pointer transition-shadow hover:shadow-lg"
+              >
+                <AvatarImage
+                  src={user.photoURL || ""}
+                  alt={user.name || "Profile"}
+                  className="h-10 w-10 rounded-full object-contain"
+                />
+                <AvatarFallback>
+                  {user.name ? user.name.charAt(0) : "U"}
+                </AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+
+            <AnimatePresence>
+              {isOpen && (
+                <DropdownMenuContent asChild sideOffset={10}>
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="p-2"
+                  >
+                    <div className="px-2 py-1 text-sm text-gray-700">
+                      {user.name} <br />
+                      <span className="text-xs text-gray-500">
+                        {user.email}
+                      </span>
+                    </div>
+                    <DropdownMenuItem asChild>
+                      <Link to="/dashboard" className="w-full">
+                        Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={onLogout}>
+                      Logout
+                    </DropdownMenuItem>
+                  </motion.div>
+                </DropdownMenuContent>
+              )}
+            </AnimatePresence>
+          </DropdownMenu>
         )}
-      </div>
-    </nav>
+      </nav>
+    </header>
   );
 }

@@ -29,7 +29,7 @@ function AuthFormBase({ fields, onSubmit, submitText, linkText, linkHref }) {
         name: user?.displayName,
         email: user?.email,
         photoURL: user?.photoURL,
-        lastLoged_in: new Date().toISOString(),
+        last_loged_in: new Date().toISOString(),
       };
 
       await axiosInstance.post("/users", newUser);

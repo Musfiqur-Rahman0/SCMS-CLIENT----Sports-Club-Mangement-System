@@ -31,9 +31,8 @@ const Signup = () => {
         name,
         email,
         photoURL,
-        lastLoged_in: new Date().toISOString(),
+        last_loged_in: new Date().toISOString(),
       };
-      //    TODO   GIVE A DEFAULT ROLE WHEN LOGIN TO THE APP.
       await axiosIntence.post("/users", newUser);
     } catch (error) {
       console.error("Image upload failed:", error);

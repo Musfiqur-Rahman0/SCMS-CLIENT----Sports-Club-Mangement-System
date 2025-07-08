@@ -14,7 +14,6 @@ const Login = () => {
     const res = await login(email, password);
     const userData = res.user;
 
-    // TODO: Call your login API here
     await axiosInstance.post("/users", { email: userData.email });
   };
 
