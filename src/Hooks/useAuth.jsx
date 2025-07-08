@@ -51,11 +51,12 @@ const useAuth = () => {
 
   const loginWithGoogle = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
       Swal.fire({
         title: "Login successful!",
         icon: "success",
       });
+      return result;
     } catch (err) {
       console.error(err);
       Swal.fire({

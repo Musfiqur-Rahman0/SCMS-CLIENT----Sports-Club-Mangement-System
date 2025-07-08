@@ -28,7 +28,7 @@ export default function Header() {
   };
 
   return (
-    <header className="flex justify-between items-center p-4 shadow-md bg-white">
+    <header className="fixed top-0 w-full z-20 flex justify-between items-center p-4 shadow-md bg-white">
       {/* Logo + Site Name */}
       <Link to="/" className="flex items-center space-x-2">
         <span className="text-xl font-bold">SCMS</span>
@@ -70,7 +70,11 @@ export default function Header() {
 
             <AnimatePresence>
               {isOpen && (
-                <DropdownMenuContent asChild sideOffset={10}>
+                <DropdownMenuContent
+                  asChild
+                  sideOffset={10}
+                  className="z-50 bg-white rounded-lg text-black"
+                >
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}

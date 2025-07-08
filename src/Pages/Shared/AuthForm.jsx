@@ -23,7 +23,7 @@ function AuthFormBase({ fields, onSubmit, submitText, linkText, linkHref }) {
   const handleGoogleLogin = async () => {
     try {
       const res = await loginWithGoogle();
-      const user = res.user;
+      const user = res?.user;
 
       const newUser = {
         name: user?.displayName,
