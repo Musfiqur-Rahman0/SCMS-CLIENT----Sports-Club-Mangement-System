@@ -1,21 +1,21 @@
 import useAuth from "@/Hooks/useAuth";
+import useAxios from "@/Hooks/useAxios";
 import { AuthForm } from "@/Pages/Shared/AuthForm";
 import React from "react";
 import { useNavigate } from "react-router";
 
 const Login = () => {
   const { loginWithGoogle, login } = useAuth();
+  const axiosInstance = useAxios();
   const navigate = useNavigate();
-  const handleLogin = (data) => {
-    const { email, password } = data;
-    login(email, password);
-    // TODO: Call your login API here
-  };
 
-  const handleGoogleLogin = () => {
-    loginWithGoogle();
-    navigate("/");
-    // TODO: Google auth here
+  const handleLogin = async (data) => {
+    const { email, password } = data;
+    const res = await login(email, password);
+    const userData = res.user;
+
+    // TODO: Call your login API here
+    await axiosInstance.post("/users", { email: userData.email });
   };
 
   return (
@@ -26,9 +26,7 @@ const Login = () => {
           { name: "password", label: "Password", type: "password" },
         ]}
         submitText="Login"
-        googleText="Login with Google"
         onSubmit={handleLogin}
-        onGoogleLogin={handleGoogleLogin}
         linkText="Don't have an account? Sign up"
         linkHref="/signup"
       />

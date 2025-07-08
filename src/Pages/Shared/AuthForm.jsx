@@ -5,16 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router";
+import useAuth from "@/Hooks/useAuth";
+import useAxios from "@/Hooks/useAxios";
+import axios from "axios";
 
-function AuthFormBase({
-  fields,
-  onSubmit,
-  submitText,
-  googleText,
-  onGoogleLogin,
-  linkText,
-  linkHref,
-}) {
+function AuthFormBase({ fields, onSubmit, submitText, linkText, linkHref }) {
   const {
     register,
     handleSubmit,
@@ -22,8 +17,26 @@ function AuthFormBase({
     formState: { errors },
   } = useForm();
 
-  // const photo = watch("photo");
-  // console.log(photo);
+  const { loginWithGoogle } = useAuth();
+  const axiosInstance = useAxios();
+
+  const handleGoogleLogin = async () => {
+    try {
+      const res = await loginWithGoogle();
+      const user = res.user;
+
+      const newUser = {
+        name: user?.displayName,
+        email: user?.email,
+        photoURL: user?.photoURL,
+        lastLoged_in: new Date().toISOString(),
+      };
+
+      await axiosInstance.post("/users", newUser);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <form
@@ -48,17 +61,15 @@ function AuthFormBase({
         {submitText}
       </Button>
 
-      {googleText && onGoogleLogin && (
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full flex items-center gap-2"
-          onClick={onGoogleLogin}
-        >
-          <FcGoogle className="text-xl" />
-          {googleText}
-        </Button>
-      )}
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full flex items-center gap-2"
+        onClick={handleGoogleLogin}
+      >
+        <FcGoogle className="text-xl" />
+        Login with Google
+      </Button>
 
       {linkText && linkHref && (
         <p className="text-sm text-center mt-2">

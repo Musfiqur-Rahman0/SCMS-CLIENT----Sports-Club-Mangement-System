@@ -1,4 +1,5 @@
 import useAuth from "@/Hooks/useAuth";
+import useAxios from "@/Hooks/useAxios";
 import { AuthForm } from "@/Pages/Shared/AuthForm";
 import axios from "axios";
 import React from "react";
@@ -7,6 +8,7 @@ import { useNavigate } from "react-router";
 const Signup = () => {
   const { signUp, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
+  const axiosIntence = useAxios();
 
   const handleSignup = async (data) => {
     const { email, password, name } = data;
@@ -25,16 +27,17 @@ const Signup = () => {
       const photoURL = res.data.data.display_url;
       signUp(email, password, name, photoURL);
 
+      const newUser = {
+        name,
+        email,
+        photoURL,
+        lastLoged_in: new Date().toISOString(),
+      };
       //    TODO   GIVE A DEFAULT ROLE WHEN LOGIN TO THE APP.
+      await axiosIntence.post("/users", newUser);
     } catch (error) {
       console.error("Image upload failed:", error);
     }
-  };
-
-  const handleGoogleLogin = () => {
-    console.log("loged in with google.");
-    loginWithGoogle();
-    // navigate("/login");
   };
 
   return (
@@ -47,9 +50,7 @@ const Signup = () => {
           { name: "photo", label: "Profile Photo", type: "file" },
         ]}
         submitText="Sign Up"
-        googleText="Sign up with Google"
         onSubmit={handleSignup}
-        onGoogleLogin={handleGoogleLogin}
         linkText="Already have an account? Login"
         linkHref="/login"
       />
