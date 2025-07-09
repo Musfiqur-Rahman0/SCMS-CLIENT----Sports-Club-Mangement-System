@@ -12,9 +12,9 @@ const Login = () => {
   const handleLogin = async (data) => {
     const { email, password } = data;
     const res = await login(email, password);
-    const userData = res.user;
+    const userData = res?.user;
 
-    await axiosInstance.post("/users", { email: userData.email });
+    await axiosInstance.post("/users", { email: userData?.email });
   };
 
   return (

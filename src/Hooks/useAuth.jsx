@@ -35,11 +35,12 @@ const useAuth = () => {
 
   const login = async (email, password) => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const result = await signInWithEmailAndPassword(auth, email, password);
       Swal.fire({
         title: "Login successful!",
         icon: "success",
       });
+      return result;
     } catch (err) {
       console.error(err);
       Swal.fire({
