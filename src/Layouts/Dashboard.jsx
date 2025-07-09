@@ -78,6 +78,10 @@ const Dashboard = () => {
           title: "Coupons",
           url: "/dashboard/manage-coupons",
           icon: CreditCard,
+          items: [
+            { title: "Manage Coupons", url: "/dashboard/manage-coupons" },
+            { title: "Add Coupons", url: "/dashboard/add-coupons" },
+          ],
         },
         {
           title: "Announcements",
@@ -98,7 +102,7 @@ const Dashboard = () => {
       member: [
         {
           title: "My Bookings",
-          url: "#",
+          url: "/dashboard/my-bookings",
           icon: CalendarCheck,
           items: [
             { title: "Pending", url: "/dashboard/pending-bookings" },
@@ -130,7 +134,7 @@ const Dashboard = () => {
       user: [
         {
           title: "My Bookings",
-          url: "/dashboard/pending-bookings",
+          url: "/dashboard/my-bookings",
           icon: CalendarCheck,
         },
         {

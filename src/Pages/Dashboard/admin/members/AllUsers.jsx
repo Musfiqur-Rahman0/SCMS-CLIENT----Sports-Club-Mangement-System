@@ -19,12 +19,12 @@ const AllUsers = () => {
     },
   });
 
-  if (isPending) {
-    return <p>loading...</p>;
-  }
-  if (isError) {
-    return <p>error ..</p>;
-  }
+  // if (isPending) {
+  //   return <p>loading...</p>;
+  // }
+  // if (isError) {
+  //   return <p>error ..</p>;
+  // }
 
   const headItems = ["#", "Name", "Email", "Role", "Last Login"];
 
@@ -50,7 +50,7 @@ const AllUsers = () => {
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">
-        Manage all users ({users.length})
+        Manage all users {users?.length}
       </h2>
 
       <SearchInput

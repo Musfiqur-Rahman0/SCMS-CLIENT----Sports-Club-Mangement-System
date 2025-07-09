@@ -25,7 +25,9 @@ export default function SharedTable({ headItems = [], bodyItems = [] }) {
             bodyItems.map((row, rowIndex) => (
               <TableRow key={rowIndex}>
                 {row.cells.map((cell, cellIndex) => (
-                  <TableCell key={cellIndex}>{cell}</TableCell>
+                  <TableCell className={"capitalize"} key={cellIndex}>
+                    {cell}
+                  </TableCell>
                 ))}
               </TableRow>
             ))

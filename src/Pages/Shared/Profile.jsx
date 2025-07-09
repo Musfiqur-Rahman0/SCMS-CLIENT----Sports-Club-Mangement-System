@@ -1,13 +1,37 @@
-import useUserRole from "@/Hooks/useUserRole";
+"use client";
+
 import React from "react";
+import useUserRole from "@/Hooks/useUserRole";
+// Assuming you have a custom auth hook for user info
+import useAxiosSecure from "@/Hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
+import AdminProfile from "../Dashboard/admin/AdminProfile";
+import MemberProfile from "../Dashboard/member/MemberProfile";
+import UserProfile from "../Dashboard/user/UserProfile";
+import useAuth from "@/Hooks/useAuth";
 
-const Profile = () => {
+export default function Profile() {
   const { role, roleLoading } = useUserRole();
+  const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
 
-  if (roleLoading) {
-    return <p>Loading...</p>;
-  }
-  return <div>Profile page of {role}</div>;
-};
+  // Example stats for Admin
+  // const { data: stats = {} } = useQuery({
+  //   queryKey: ["admin-stats"],
+  //   queryFn: async () => {
+  //     const res = await axiosSecure.get("/admin-stats");
+  //     return res.data;
+  //   },
+  //   enabled: role === "admin",
+  // });
 
-export default Profile;
+  // if (roleLoading) return <p className="text-center">Loading profile...</p>;
+
+  return (
+    <div className="w-[80%] mx-auto p-8">
+      {role === "admin" && <AdminProfile user={user} stats={{}} />}
+      {role === "member" && <MemberProfile user={user} />}
+      {role === "user" && <UserProfile user={user} />}
+    </div>
+  );
+}

@@ -12,16 +12,18 @@ import RejectedBookings from "@/Pages/Dashboard/admin/bookings/RejectedBookings"
 import AddCourts from "@/Pages/Dashboard/admin/Courts/AddCourts";
 import EditCourt from "@/Pages/Dashboard/admin/Courts/EditCourt";
 import ManageCourts from "@/Pages/Dashboard/admin/Courts/ManageCourts";
-import Coupons from "@/Pages/Dashboard/admin/cuppons/Cuppons";
+import AddCoupons from "@/Pages/Dashboard/admin/cuppons/AddCoupons";
+import ManageCoupons from "@/Pages/Dashboard/admin/cuppons/ManageCuppons";
+import Coupons from "@/Pages/Dashboard/admin/cuppons/ManageCuppons";
 import AllUsers from "@/Pages/Dashboard/admin/members/AllUsers";
 import ChangeUserRole from "@/Pages/Dashboard/admin/members/ChangeUserRole";
 import ManageMembers from "@/Pages/Dashboard/admin/members/ManageMembers";
-import Member from "@/Pages/Dashboard/member/Member";
 import MakePayments from "@/Pages/Dashboard/member/Payments/MakePayments";
 import PaymentHistory from "@/Pages/Dashboard/member/Payments/PaymentHistory";
-import User from "@/Pages/Dashboard/user/User";
 import ErrorPage from "@/Pages/Error/ErrorPage";
 import Home from "@/Pages/Home/Home";
+import MyBookings from "@/Pages/Shared/MyBookings";
+import PendingBookings from "@/Pages/Shared/PendingBookings";
 import Profile from "@/Pages/Shared/Profile";
 
 import { createBrowserRouter } from "react-router";
@@ -51,8 +53,12 @@ const router = createBrowserRouter([
         element: <Profile />,
       },
       {
+        path: "my-bookings",
+        element: <MyBookings />,
+      },
+      {
         path: "pending-bookings",
-        element: <ManageBookings />,
+        element: <PendingBookings />,
       },
       {
         path: "approved-bookings",
@@ -109,6 +115,14 @@ const router = createBrowserRouter([
       {
         path: "update-court/:id",
         element: <EditCourt />,
+      },
+      {
+        path: "add-coupons",
+        element: <AddCoupons />,
+      },
+      {
+        path: "manage-coupons",
+        element: <ManageCoupons />,
       },
     ],
   },
