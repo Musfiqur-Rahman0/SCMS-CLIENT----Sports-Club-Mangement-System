@@ -6,9 +6,10 @@ import Signup from "@/Pages/Auth/signupPage/Signup";
 import CourtsPage from "@/Pages/Courts/CourtsPage";
 import Announcement from "@/Pages/Dashboard/admin/Announcement/Announcement";
 import MakeAnnouncement from "@/Pages/Dashboard/admin/Announcement/MakeAnnouncement";
+import AllApprovedBookings from "@/Pages/Dashboard/admin/bookings/AllApprovedBookings";
 import ConfirmedBookings from "@/Pages/Dashboard/admin/bookings/ConfirmedBookings";
 import ManageBookings from "@/Pages/Dashboard/admin/bookings/ManageBookings";
-import RejectedBookings from "@/Pages/Dashboard/admin/bookings/RejectedBookings";
+// import RejectedBookings from "@/Pages/Dashboard/admin/bookings/ApprovedBookings";
 import AddCourts from "@/Pages/Dashboard/admin/Courts/AddCourts";
 import EditCourt from "@/Pages/Dashboard/admin/Courts/EditCourt";
 import ManageCourts from "@/Pages/Dashboard/admin/Courts/ManageCourts";
@@ -63,12 +64,16 @@ const router = createBrowserRouter([
         element: <ManageBookings />,
       },
       {
-        path: "approved-bookings",
+        path: "confirmed-bookings",
         element: <ConfirmedBookings />,
       },
       {
-        path: "rejected-bookings",
-        element: <RejectedBookings />,
+        path: "approved-bookings",
+        element: <ApprovedBookings />,
+      },
+      {
+        path: "all-approved-bookings",
+        element: <AllApprovedBookings />,
       },
       {
         path: "payment",

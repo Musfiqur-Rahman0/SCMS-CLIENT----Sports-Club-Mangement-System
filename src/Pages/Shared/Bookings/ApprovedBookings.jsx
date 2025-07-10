@@ -2,16 +2,18 @@
 
 import React from "react";
 import useAxiosSecure from "@/Hooks/useAxiosSecure";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import SharedTable from "@/Pages/Shared/SharedTable";
 import useAxios from "@/Hooks/useAxios";
 import useAuth from "@/Hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import Swal from "sweetalert2";
 
 export default function ApprovedBookings() {
   const axiosInstence = useAxios();
   const { user } = useAuth();
   const { email } = user;
+  const queryClient = useQueryClient();
   // Fetch only approved bookings
   const {
     data: bookings = [],
@@ -28,8 +30,35 @@ export default function ApprovedBookings() {
     },
   });
 
-  if (isPending) return <p>Loading approved bookings...</p>;
-  if (isError) return <p>Error loading bookings.</p>;
+  const mutation = useMutation({
+    mutationFn: async (bookingID) => {
+      const res = await axiosInstence.delete(`/bookings/${bookingID}`);
+      return res.data;
+    },
+    onSuccess: () => {
+      // ✅ Refetch bookings to reflect changes
+      queryClient.invalidateQueries(["mypending-bookings"]);
+
+      // ✅ Or show a toast or SweetAlert
+      Swal.fire({
+        icon: "success",
+        title: "Booking Canceled!",
+        text: "The booking status has been updated successfully.",
+      });
+    },
+    onError: (error) => {
+      console.error(error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong while cenceling!",
+      });
+    },
+  });
+
+  const handleCencelBooking = (bookingID) => {
+    mutation.mutate(bookingID);
+  };
 
   const headItems = [
     "#",
@@ -39,7 +68,7 @@ export default function ApprovedBookings() {
     "Slots",
     "Total Price",
     "Status",
-    "Action",
+    "Actions",
   ];
 
   const bodyItems = bookings.map((booking, index) => ({
@@ -51,9 +80,20 @@ export default function ApprovedBookings() {
       Array.isArray(booking.slots) ? booking.slots.join(", ") : booking.slots,
       `$${booking.totalPrice || 0}`,
       booking.status || "Approved",
-      <Button>Pay</Button>,
+      <div className="flex items-center gap-3">
+        <Button>Pay</Button>
+        <Button
+          variant={"outline"}
+          onClick={() => handleCencelBooking(booking._id)}
+        >
+          Cancel
+        </Button>
+      </div>,
     ],
   }));
+
+  if (isPending) return <p>Loading approved bookings...</p>;
+  if (isError) return <p>Error loading bookings.</p>;
 
   return (
     <div className="w-[90%] mx-auto p-8">

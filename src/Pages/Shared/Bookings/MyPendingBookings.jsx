@@ -1,13 +1,17 @@
 import useAuth from "@/Hooks/useAuth";
 import useAxios from "@/Hooks/useAxios";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import SharedTable from "../SharedTable";
+import { Button } from "@/components/ui/button";
+import Swal from "sweetalert2";
 
 const MyPendingBookings = () => {
   const { user } = useAuth();
   const axiosInstence = useAxios();
   const { email } = user;
+
+  const queryClient = useQueryClient();
 
   const {
     data: myPendingBookings = [],
@@ -23,9 +27,35 @@ const MyPendingBookings = () => {
     },
   });
 
-  if (isPending) {
-    return <p>Loading...</p>;
-  }
+  const mutation = useMutation({
+    mutationFn: async (bookingID) => {
+      const res = await axiosInstence.delete(`/bookings/${bookingID}`);
+      return res.data;
+    },
+    onSuccess: () => {
+      // ✅ Refetch bookings to reflect changes
+      queryClient.invalidateQueries(["mypending-bookings"]);
+
+      // ✅ Or show a toast or SweetAlert
+      Swal.fire({
+        icon: "success",
+        title: "Booking Canceled!",
+        text: "The booking status has been updated successfully.",
+      });
+    },
+    onError: (error) => {
+      console.error(error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong while cenceling!",
+      });
+    },
+  });
+
+  const handleCencelBooking = (bookingID) => {
+    mutation.mutate(bookingID);
+  };
 
   const headItems = [
     "#",
@@ -35,6 +65,7 @@ const MyPendingBookings = () => {
     "Slots",
     "Total Price",
     "Status",
+    "Actions",
   ];
 
   const bodyItems = myPendingBookings.map((booking, index) => ({
@@ -46,8 +77,18 @@ const MyPendingBookings = () => {
       booking.slots,
       `$${booking.totalPrice}`,
       booking.status,
+      <Button
+        onClick={() => handleCencelBooking(booking._id)}
+        variant={"outline"}
+      >
+        Cencel Booking
+      </Button>,
     ],
   }));
+
+  if (isPending) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="p-6">
