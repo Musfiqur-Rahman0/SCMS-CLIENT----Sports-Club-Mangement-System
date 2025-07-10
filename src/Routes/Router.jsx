@@ -22,8 +22,10 @@ import MakePayments from "@/Pages/Dashboard/member/Payments/MakePayments";
 import PaymentHistory from "@/Pages/Dashboard/member/Payments/PaymentHistory";
 import ErrorPage from "@/Pages/Error/ErrorPage";
 import Home from "@/Pages/Home/Home";
+import ApprovedBookings from "@/Pages/Shared/Bookings/ApprovedBookings";
+import MyPendingBookings from "@/Pages/Shared/Bookings/MyPendingBookings";
 import MyBookings from "@/Pages/Shared/MyBookings";
-import PendingBookings from "@/Pages/Shared/PendingBookings";
+// import PendingBookings from "@/Pages/Shared/PendingBookings";
 import Profile from "@/Pages/Shared/Profile";
 
 import { createBrowserRouter } from "react-router";
@@ -58,7 +60,7 @@ const router = createBrowserRouter([
       },
       {
         path: "pending-bookings",
-        element: <PendingBookings />,
+        element: <ManageBookings />,
       },
       {
         path: "approved-bookings",
@@ -123,6 +125,18 @@ const router = createBrowserRouter([
       {
         path: "manage-coupons",
         element: <ManageCoupons />,
+      },
+      {
+        path: "my-pending-bookings",
+        element: <MyPendingBookings />,
+      },
+      {
+        path: "my-approved-bookings",
+        element: <ApprovedBookings />,
+      },
+      {
+        path: "my-confirmed-bookings",
+        element: <ConfirmedBookings />,
       },
     ],
   },

@@ -105,9 +105,9 @@ const Dashboard = () => {
           url: "/dashboard/my-bookings",
           icon: CalendarCheck,
           items: [
-            { title: "Pending", url: "/dashboard/pending-bookings" },
-            { title: "Approved", url: "/dashboard/approved-bookings" },
-            { title: "Rejected", url: "/dashboard/rejected-bookings" },
+            { title: "Pending", url: "/dashboard/my-pending-bookings" },
+            { title: "Approved", url: "/dashboard/my-approved-bookings" },
+            { title: "Confirmed", url: "/dashboard/my-confirmed-bookings" },
           ],
         },
         {
@@ -134,8 +134,13 @@ const Dashboard = () => {
       user: [
         {
           title: "My Bookings",
-          url: "/dashboard/my-bookings",
+          url: "#",
           icon: CalendarCheck,
+          items: [
+            { title: "Pending", url: "/dashboard/my-pending-bookings" },
+            { title: "Approved", url: "/dashboard/my-approved-bookings" },
+            { title: "Confirmed", url: "/dashboard/my-confirmed-bookings" },
+          ],
         },
         {
           title: "Announcements",
