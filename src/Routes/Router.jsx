@@ -76,7 +76,7 @@ const router = createBrowserRouter([
         element: <AllApprovedBookings />,
       },
       {
-        path: "payment",
+        path: "payment/:id",
         element: <MakePayments />,
       },
       {

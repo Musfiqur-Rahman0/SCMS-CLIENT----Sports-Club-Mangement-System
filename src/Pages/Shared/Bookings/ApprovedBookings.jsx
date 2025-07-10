@@ -8,12 +8,14 @@ import useAxios from "@/Hooks/useAxios";
 import useAuth from "@/Hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
 
 export default function ApprovedBookings() {
   const axiosInstence = useAxios();
   const { user } = useAuth();
   const { email } = user;
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   // Fetch only approved bookings
   const {
     data: bookings = [],
@@ -81,7 +83,9 @@ export default function ApprovedBookings() {
       `$${booking.totalPrice || 0}`,
       booking.status || "Approved",
       <div className="flex items-center gap-3">
-        <Button>Pay</Button>
+        <Button onClick={() => navigate(`/dashboard/payment/${booking._id}`)}>
+          Pay
+        </Button>
         <Button
           variant={"outline"}
           onClick={() => handleCencelBooking(booking._id)}
