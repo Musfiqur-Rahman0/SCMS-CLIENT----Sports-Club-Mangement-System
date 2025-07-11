@@ -6,12 +6,15 @@ import { Button } from "@/components/ui/button";
 import useAxiosSecure from "@/Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import useAuth from "@/Hooks/useAuth";
+import { useNavigate } from "react-router";
 
 export default function CheckoutForm({ selectedBookings }) {
   const stripe = useStripe();
   const elements = useElements();
   const { user } = useAuth();
   const [error, setError] = useState("");
+  const [isMakingPayments, setIsMakingPayment] = useState(false);
+  const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
 
   const amount = selectedBookings.totalPrice;
@@ -39,6 +42,7 @@ export default function CheckoutForm({ selectedBookings }) {
       setError(error.message);
     } else {
       setError("");
+      setIsMakingPayment(true);
       console.log(paymentMethod);
 
       const res = await axiosSecure.post("/create-payment-intent", {
@@ -80,10 +84,16 @@ export default function CheckoutForm({ selectedBookings }) {
               title: "Payment Successful!",
               html: `<strong>Transaction ID:</strong> <code>${transactionId}</code>`,
               confirmButtonText: "Go to My payments",
+            }).then((res) => {
+              if (res.isConfirmed) {
+                navigate("/dashboard/payment-history");
+              }
             });
           }
         }
       }
+
+      setIsMakingPayment(false);
     }
   };
 
@@ -108,7 +118,11 @@ export default function CheckoutForm({ selectedBookings }) {
       </div>
       <Button
         type="submit"
-        disabled={!stripe || selectedBookings.paymentStatus === "paid"}
+        disabled={
+          !stripe ||
+          selectedBookings.paymentStatus === "paid" ||
+          isMakingPayments
+        }
         className={"w-full text-center bg-green-600 hover:bg-green-700"}
       >
         Pay Now ${selectedBookings.totalPrice}
