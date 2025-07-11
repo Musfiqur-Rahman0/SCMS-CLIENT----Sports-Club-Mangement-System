@@ -71,12 +71,10 @@ export default function BookNowModal({ open, onClose, court }) {
       totalPrice: totalPrice,
       date: selectedDate.toISOString(),
       status: "pending",
-      // You may also want to add user info here (from context)
       userName: user?.displayName,
       userEmail: user?.email,
+      paymentStatus: "unpaid",
     };
-
-    // console.log(bookingData);
 
     bookingMutation.mutate(bookingData);
   };

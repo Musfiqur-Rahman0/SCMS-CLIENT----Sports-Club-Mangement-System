@@ -7,7 +7,8 @@ import CourtsPage from "@/Pages/Courts/CourtsPage";
 import Announcement from "@/Pages/Dashboard/admin/Announcement/Announcement";
 import MakeAnnouncement from "@/Pages/Dashboard/admin/Announcement/MakeAnnouncement";
 import AllApprovedBookings from "@/Pages/Dashboard/admin/bookings/AllApprovedBookings";
-import ConfirmedBookings from "@/Pages/Dashboard/admin/bookings/ConfirmedBookings";
+import AllConfirmedBookings from "@/Pages/Dashboard/admin/bookings/ConfirmedBookings";
+// import ConfirmedBookings from "@/Pages/Dashboard/admin/bookings/ConfirmedBookings";
 import ManageBookings from "@/Pages/Dashboard/admin/bookings/ManageBookings";
 // import RejectedBookings from "@/Pages/Dashboard/admin/bookings/ApprovedBookings";
 import AddCourts from "@/Pages/Dashboard/admin/Courts/AddCourts";
@@ -24,6 +25,7 @@ import PaymentHistory from "@/Pages/Dashboard/member/Payments/PaymentHistory";
 import ErrorPage from "@/Pages/Error/ErrorPage";
 import Home from "@/Pages/Home/Home";
 import ApprovedBookings from "@/Pages/Shared/Bookings/ApprovedBookings";
+import ConfirmedBookings from "@/Pages/Shared/Bookings/ConfirmedBookings";
 import MyPendingBookings from "@/Pages/Shared/Bookings/MyPendingBookings";
 import MyBookings from "@/Pages/Shared/MyBookings";
 // import PendingBookings from "@/Pages/Shared/PendingBookings";
@@ -60,16 +62,20 @@ const router = createBrowserRouter([
         element: <MyBookings />,
       },
       {
+        path: "my-confirmed-bookings",
+        element: <ConfirmedBookings />,
+      },
+      {
         path: "pending-bookings",
         element: <ManageBookings />,
       },
       {
-        path: "confirmed-bookings",
-        element: <ConfirmedBookings />,
-      },
-      {
         path: "approved-bookings",
         element: <ApprovedBookings />,
+      },
+      {
+        path: "all-confirmed-bookings",
+        element: <AllConfirmedBookings />,
       },
       {
         path: "all-approved-bookings",

@@ -1,22 +1,93 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
+import useAxiosSecure from "@/Hooks/useAxiosSecure";
+import Swal from "sweetalert2";
+import useAuth from "@/Hooks/useAuth";
 
-export default function CheckoutForm({ bookingId }) {
+export default function CheckoutForm({ selectedBookings }) {
   const stripe = useStripe();
   const elements = useElements();
+  const { user } = useAuth();
+  const [error, setError] = useState("");
+  const axiosSecure = useAxiosSecure();
+
+  const amount = selectedBookings.totalPrice;
+  const amountInCents = amount * 100;
+  // console.log(amountInCents);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Booking ID:", bookingId);
+    console.log("Booking ID:", selectedBookings._id);
 
     if (!stripe || !elements) return;
 
-    // ✅ Later: create PaymentIntent, confirm payment, update DB...
-    console.log("Here you’ll handle payment confirmation with Stripe API.");
+    const card = elements.getElement(CardElement);
+
+    if (!card) {
+      return;
+    }
+
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: "card",
+      card,
+    });
+
+    if (error) {
+      setError(error.message);
+    } else {
+      setError("");
+      console.log(paymentMethod);
+
+      const res = await axiosSecure.post("/create-payment-intent", {
+        amountInCents,
+      });
+
+      const clientSecret = res.data.clientSecret;
+
+      const result = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: card,
+          billing_details: {
+            name: user?.displayName,
+            email: user?.email,
+          },
+        },
+      });
+
+      if (result.error) {
+        setError(result.error.message);
+      } else {
+        setError("");
+        if (result.paymentIntent.status === "succeeded") {
+          const transactionId = result.paymentIntent.id;
+
+          const paymentData = {
+            bookingId: selectedBookings._id,
+            email: user?.email,
+            amount,
+            transactionId: transactionId,
+            paymentMethod: result.paymentIntent.payment_method_types,
+          };
+
+          const paymentRes = await axiosSecure.post("/payments", paymentData);
+          if (paymentRes.data.insertedId) {
+            // ✅ Show SweetAlert with transaction ID
+            await Swal.fire({
+              icon: "success",
+              title: "Payment Successful!",
+              html: `<strong>Transaction ID:</strong> <code>${transactionId}</code>`,
+              confirmButtonText: "Go to My payments",
+            });
+          }
+        }
+      }
+    }
   };
+
+  // console.log()
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -33,9 +104,14 @@ export default function CheckoutForm({ bookingId }) {
             },
           }}
         />
+        <p className="text-red-500">{error}</p>
       </div>
-      <Button type="submit" disabled={!stripe}>
-        Pay Now
+      <Button
+        type="submit"
+        disabled={!stripe || selectedBookings.paymentStatus === "paid"}
+        className={"w-full text-center bg-green-600 hover:bg-green-700"}
+      >
+        Pay Now ${selectedBookings.totalPrice}
       </Button>
     </form>
   );

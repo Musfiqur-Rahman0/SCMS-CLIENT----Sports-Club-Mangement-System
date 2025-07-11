@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import useAxios from "@/Hooks/useAxios";
 import SharedTable from "@/Pages/Shared/SharedTable";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { BookType } from "lucide-react";
 import React from "react";
 import Swal from "sweetalert2";
 
@@ -21,9 +22,10 @@ const ManageBookings = () => {
   });
 
   const approveMutation = useMutation({
-    mutationFn: async ({ bookingId, status }) => {
+    mutationFn: async ({ bookingId, status, booked_by }) => {
       const res = await axiosInstence.patch(`/bookings/${bookingId}`, {
         status,
+        booked_by,
       });
       return res.data;
     },
@@ -49,7 +51,7 @@ const ManageBookings = () => {
     },
   });
 
-  const handleApprove = (bookingId) => {
+  const handleApprove = (booking) => {
     Swal.fire({
       title: "Are you sure?",
       text: "Do you really want to approve this booking?",
@@ -60,8 +62,9 @@ const ManageBookings = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         approveMutation.mutate({
-          bookingId: bookingId,
+          bookingId: booking._id,
           status: "approved",
+          booked_by: booking.userEmail,
         });
       }
     });
@@ -112,7 +115,7 @@ const ManageBookings = () => {
       <div className="flex gap-2">
         <Button
           size="sm"
-          onClick={() => handleApprove(booking._id)}
+          onClick={() => handleApprove(booking)}
           disabled={approveMutation.isPending}
         >
           Approve
