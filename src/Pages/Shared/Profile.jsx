@@ -15,18 +15,6 @@ export default function Profile() {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
 
-  // Example stats for Admin
-  // const { data: stats = {} } = useQuery({
-  //   queryKey: ["admin-stats"],
-  //   queryFn: async () => {
-  //     const res = await axiosSecure.get("/admin-stats");
-  //     return res.data;
-  //   },
-  //   enabled: role === "admin",
-  // });
-
-  // if (roleLoading) return <p className="text-center">Loading profile...</p>;
-
   return (
     <div className="w-[80%] mx-auto p-8">
       {role === "admin" && <AdminProfile user={user} stats={{}} />}

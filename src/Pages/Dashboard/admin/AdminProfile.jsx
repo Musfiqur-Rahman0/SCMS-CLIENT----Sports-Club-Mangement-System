@@ -1,6 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import useCurd from "@/Hooks/useCurd";
 
-export default function AdminProfile({ user, stats = {} }) {
+export default function AdminProfile({ user }) {
+  const { read } = useCurd("/admin-stats", ["admin"]);
+
+  const { data: adminStats = {}, isPending, isError } = read;
+
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
@@ -19,30 +24,36 @@ export default function AdminProfile({ user, stats = {} }) {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Total Courts</CardTitle>
-          </CardHeader>
-          <CardContent className="text-3xl font-bold">
-            {stats.totalCourts ?? 0}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Total Users</CardTitle>
-          </CardHeader>
-          <CardContent className="text-3xl font-bold">
-            {stats.totalUsers ?? 0}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Total Members</CardTitle>
-          </CardHeader>
-          <CardContent className="text-3xl font-bold">
-            {stats.totalMembers ?? 0}
-          </CardContent>
-        </Card>
+        {isPending ? (
+          <p>loading adminStats...</p>
+        ) : (
+          <>
+            <Card>
+              <CardHeader>
+                <CardTitle>Total Courts</CardTitle>
+              </CardHeader>
+              <CardContent className="text-3xl font-bold">
+                {adminStats.totalCourts ?? 0}
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Total Users</CardTitle>
+              </CardHeader>
+              <CardContent className="text-3xl font-bold">
+                {adminStats.totalUsers ?? 0}
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Total bookings</CardTitle>
+              </CardHeader>
+              <CardContent className="text-3xl font-bold">
+                {adminStats.totalMembers ?? 0}
+              </CardContent>
+            </Card>
+          </>
+        )}
       </div>
     </div>
   );
