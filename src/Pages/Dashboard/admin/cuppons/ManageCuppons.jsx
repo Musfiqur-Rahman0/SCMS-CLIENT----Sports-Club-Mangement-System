@@ -44,36 +44,12 @@ export default function ManageCoupons() {
   const [endDate, setEndDate] = useState();
   const [selectedCoupon, setSelectedCoupon] = useState(null);
 
-  const { read } = useCurd("/coupons", ["admin"]);
+  const { read, updateWithPut, deleteMutation } = useCurd("/coupons", [
+    "admin",
+  ]);
 
   const { data: coupons = [], isPending, isError } = read;
-
-  // Delete coupon mutation
-  const mutation = useMutation({
-    mutationFn: async (id) => {
-      const res = await axiosSecure.delete(`/coupons/${id}`);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/coupons"] });
-      Swal.fire("Deleted!", "Coupon has been deleted.", "success");
-    },
-    onError: () => {
-      Swal.fire("Error", "Failed to delete coupon.", "error");
-    },
-  });
-
-  // update mutation
-  const updateMutation = useMutation({
-    mutationFn: async ({ id, updatedCoupon }) => {
-      const res = await axiosSecure.put(`/coupons/${id}`, updatedCoupon);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["/coupons"]);
-      Swal.fire("updated!", "Coupon updated successfully!", "success");
-    },
-  });
+  const { mutate } = updateWithPut;
 
   const handleDelete = (coupon) => {
     Swal.fire({
@@ -84,7 +60,8 @@ export default function ManageCoupons() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        mutation.mutate(coupon._id);
+        // mutation.mutate(coupon._id);
+        deleteMutation.mutate(coupon._id);
       }
     });
   };
@@ -172,8 +149,7 @@ export default function ManageCoupons() {
     data.startDate = startDate ? startDate.toISOString() : null;
     data.endDate = endDate ? endDate.toISOString() : null;
 
-    updateMutation.mutate({ id, updatedCoupon: data });
-
+    mutate({ id, updatedItems: data });
     setIsModalOpen(false);
   };
 

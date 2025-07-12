@@ -25,6 +25,7 @@ import { format } from "date-fns";
 import useAxiosSecure from "@/Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
+import useCurd from "@/Hooks/useCurd";
 
 const AddCoupons = () => {
   const axiosSecure = useAxiosSecure();
@@ -32,6 +33,8 @@ const AddCoupons = () => {
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const navigate = useNavigate();
+
+  const { create } = useCurd("/coupons", ["admin"]);
 
   const {
     register,
@@ -56,13 +59,10 @@ const AddCoupons = () => {
   const onSubmit = async (data) => {
     data.startDate = startDate ? startDate.toISOString() : null;
     data.endDate = endDate ? endDate.toISOString() : null;
-
     try {
-      const res = await axiosSecure.post("/coupons", data);
-      if (res.data.insertedId) {
-        Swal.fire("Success!", "Coupon added successfully!", "success");
-        navigate("/dashboard/manage-coupons");
-      }
+      await create.mutateAsync(data);
+      Swal.fire("Success!", "Coupon added successfully!", "success");
+      navigate("/dashboard/manage-coupons");
     } catch (err) {
       Swal.fire("Error", "Failed to add coupon", "error");
     }
