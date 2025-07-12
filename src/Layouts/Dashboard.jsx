@@ -51,7 +51,7 @@ const Dashboard = () => {
             { title: "Manage Bookings", url: "/dashboard/pending-bookings" },
             {
               title: "Confirmed Bookings",
-              url: "/dashboard/confirmed-bookings",
+              url: "/dashboard/all-confirmed-bookings",
             },
             {
               title: "Approved Bookings",

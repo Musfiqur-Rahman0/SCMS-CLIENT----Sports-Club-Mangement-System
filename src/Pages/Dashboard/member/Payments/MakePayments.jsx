@@ -5,6 +5,7 @@ import CheckoutForm from "./CheckoutForm";
 import { loadStripe } from "@stripe/stripe-js";
 import { useQuery } from "@tanstack/react-query";
 import useAxios from "@/Hooks/useAxios";
+import useCurd from "@/Hooks/useCurd";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK);
 
@@ -12,14 +13,8 @@ const MakePayments = () => {
   const { id } = useParams();
   const axiosInstence = useAxios();
 
-  const { data: selectedBookings, isPending } = useQuery({
-    queryKey: ["selected-booking-data", id],
-    enabled: !!id,
-    queryFn: async () => {
-      const res = await axiosInstence.get(`/bookings/${id}`);
-      return res.data;
-    },
-  });
+  const { read } = useCurd(`/bookings/${id}`, ["admin", "member"]);
+  const { data: selectedBookings = {}, isPending, isError } = read;
 
   if (isPending) {
     return <p>Loading...</p>;

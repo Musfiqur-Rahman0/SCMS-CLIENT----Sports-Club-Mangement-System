@@ -4,21 +4,13 @@ import { useQuery } from "@tanstack/react-query";
 import useAxios from "@/Hooks/useAxios";
 import SharedTable from "@/Pages/Shared/SharedTable";
 import React from "react";
+import useCurd from "@/Hooks/useCurd";
 
 export default function AllApprovedBookings() {
   const axiosInstence = useAxios();
 
-  const {
-    data: approvedBookings = [],
-    isPending,
-    isError,
-  } = useQuery({
-    queryKey: ["approved-bookings"],
-    queryFn: async () => {
-      const res = await axiosInstence.get("/bookings?status=approved");
-      return res.data;
-    },
-  });
+  const { read } = useCurd("/bookings?status=approved", ["admin", "member"]);
+  const { data: approvedBookings = [], isPending, isError } = read;
 
   console.log(approvedBookings);
 

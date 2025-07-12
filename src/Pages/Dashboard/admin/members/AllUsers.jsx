@@ -1,30 +1,18 @@
 import { Input } from "@/components/ui/input";
 import useAxiosSecure from "@/Hooks/useAxiosSecure";
+import useCurd from "@/Hooks/useCurd";
 import SearchInput from "@/Pages/Shared/SearchInput";
 import SharedTable from "@/Pages/Shared/SharedTable";
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const AllUsers = () => {
   const axiosSecure = useAxiosSecure();
   const [searchName, setSearchName] = useState("");
-  const [users, setUsers] = useState();
+  const [users, setUsers] = useState([]);
 
-  const { data, isPending, isError } = useQuery({
-    queryKey: ["users"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/users");
-      setUsers(res.data);
-      return res.data;
-    },
-  });
-
-  // if (isPending) {
-  //   return <p>loading...</p>;
-  // }
-  // if (isError) {
-  //   return <p>error ..</p>;
-  // }
+  const { read } = useCurd("/users", ["admin"]);
+  const { data, isPending, isError } = read;
 
   const headItems = ["#", "Name", "Email", "Role", "Last Login"];
 
@@ -42,10 +30,15 @@ const AllUsers = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-
     const res = await axiosSecure.get(`/users?name=${searchName}`);
     setUsers(res.data);
   };
+
+  useEffect(() => {
+    if (data) {
+      setUsers(data);
+    }
+  }, [data]);
 
   return (
     <div className="space-y-4">

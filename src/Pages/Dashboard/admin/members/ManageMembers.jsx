@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button";
 import useAuth from "@/Hooks/useAuth";
 import useAxiosSecure from "@/Hooks/useAxiosSecure";
+import useCurd from "@/Hooks/useCurd";
 import SearchInput from "@/Pages/Shared/SearchInput";
 import SharedTable from "@/Pages/Shared/SharedTable";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 const ManageMembers = () => {
@@ -14,14 +15,8 @@ const ManageMembers = () => {
   const [error, setError] = useState("");
   const queryClient = useQueryClient();
 
-  const { data, isPending, isError } = useQuery({
-    queryKey: ["members"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/users?role=member");
-      setMembers(res.data);
-      return res.data;
-    },
-  });
+  const { read } = useCurd("/users?role=member", ["admin"]);
+  const { data, isPending, isError } = read;
 
   const mutation = useMutation({
     mutationFn: async ({ role, id, email }) => {
@@ -99,13 +94,19 @@ const ManageMembers = () => {
     ],
   }));
 
+  useEffect(() => {
+    if (data) {
+      setMembers(data);
+    }
+  }, [data]);
+
   if (isPending) {
     return <p>loading...</p>;
   }
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">
-        Manage all members {members?.length}
+        Manage all members ({members?.length})
       </h2>
 
       <SearchInput

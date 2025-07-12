@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import useAxios from "@/Hooks/useAxios";
+import useCurd from "@/Hooks/useCurd";
 import SharedTable from "@/Pages/Shared/SharedTable";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BookType } from "lucide-react";
@@ -9,17 +10,13 @@ import Swal from "sweetalert2";
 const ManageBookings = () => {
   const axiosInstence = useAxios();
   const queryClient = useQueryClient();
-  const {
-    data: pendingBookings = [],
-    isPending,
-    isError,
-  } = useQuery({
-    queryKey: ["pending-bookings"],
-    queryFn: async () => {
-      const res = await axiosInstence.get(`/bookings?status=pending`);
-      return res.data;
-    },
-  });
+
+  const { read } = useCurd("/bookings?status=pending", [
+    "user",
+    "admin",
+    "member",
+  ]);
+  const { data: pendingBookings, isPending, isError } = read;
 
   const approveMutation = useMutation({
     mutationFn: async ({ bookingId, status, booked_by }) => {

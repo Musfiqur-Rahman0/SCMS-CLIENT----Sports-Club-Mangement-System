@@ -25,6 +25,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
 import useAxiosSecure from "@/Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
+import useCurd from "@/Hooks/useCurd";
 
 export default function EditCourt() {
   const [deadline, setDeadline] = useState(null);
@@ -32,17 +33,8 @@ export default function EditCourt() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const {
-    data: selectedCourt,
-    isPending,
-    isError,
-  } = useQuery({
-    queryKey: ["update-courts", id],
-    queryFn: async () => {
-      const res = await axiosSecure.get(`/courts/${id}`);
-      return res.data;
-    },
-  });
+  const { read } = useCurd(`/courts/${id}`, ["admin"]);
+  const { data: selectedCourt, isPending, isError } = read;
 
   const {
     register,

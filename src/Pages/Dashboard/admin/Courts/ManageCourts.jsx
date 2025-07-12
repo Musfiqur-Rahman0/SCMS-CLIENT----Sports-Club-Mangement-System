@@ -7,6 +7,7 @@ import SharedTable from "@/Pages/Shared/SharedTable";
 import { Button } from "@/components/ui/button";
 
 import { useNavigate } from "react-router";
+import useCurd from "@/Hooks/useCurd";
 
 export default function ManageCourts() {
   const queryClient = useQueryClient();
@@ -14,17 +15,21 @@ export default function ManageCourts() {
   const [editCourt, setEditCourt] = useState(null);
   const navigate = useNavigate();
 
-  const {
-    data: courts,
-    isPending,
-    isError,
-  } = useQuery({
-    queryKey: ["courts"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/courts");
-      return res.data;
-    },
-  });
+  const { read } = useCurd("/courts", ["member", "admin", "user"]);
+
+  const { data: courts = [], isPending, isError } = read;
+
+  // const {
+  //   data: courts,
+  //   isPending,
+  //   isError,
+  // } = useQuery({
+  //   queryKey: ["courts"],
+  //   queryFn: async () => {
+  //     const res = await axiosSecure.get("/courts");
+  //     return res.data;
+  //   },
+  // });
 
   const deleteMutation = useMutation({
     mutationFn: async (id) => axiosSecure.delete(`/courts/${id}`),
@@ -46,10 +51,6 @@ export default function ManageCourts() {
         deleteMutation.mutate(court._id);
       }
     });
-  };
-
-  const handleUpdate = (courtData) => {
-    updateMutation.mutate(courtData);
   };
 
   if (isPending) {

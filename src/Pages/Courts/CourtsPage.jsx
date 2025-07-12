@@ -14,6 +14,7 @@ import {
 import { AuthContext } from "@/Context/AuthContext";
 import { useNavigate } from "react-router";
 import BookNowModal from "@/components/courts/BookNowModal";
+import useCurd from "@/Hooks/useCurd";
 
 export default function CourtsPage() {
   const axiosInstance = useAxios();
@@ -22,17 +23,21 @@ export default function CourtsPage() {
   const [selectedCourt, setSelectedCourt] = useState(null);
   const navigate = useNavigate();
 
-  const {
-    data: courts = [],
-    isPending,
-    isError,
-  } = useQuery({
-    queryKey: ["All Courts"],
-    queryFn: async () => {
-      const res = await axiosInstance.get("/courts");
-      return res.data;
-    },
-  });
+  const { read } = useCurd("/courts", ["member", "admin", "user"]);
+
+  const { data: courts = [], isPending, isError } = read;
+
+  // const {
+  //   data: courts = [],
+  //   isPending,
+  //   isError,
+  // } = useQuery({
+  //   queryKey: ["All Courts"],
+  //   queryFn: async () => {
+  //     const res = await axiosInstance.get("/courts");
+  //     return res.data;
+  //   },
+  // });
 
   if (isPending) {
     return <p className="text-center mt-8">Loading courts...</p>;
