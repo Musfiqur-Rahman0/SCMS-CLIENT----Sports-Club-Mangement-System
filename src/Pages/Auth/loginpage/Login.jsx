@@ -1,8 +1,10 @@
 import useAuth from "@/Hooks/useAuth";
 import useAxios from "@/Hooks/useAxios";
 import { AuthForm } from "@/Pages/Shared/AuthForm";
+import Lottie from "lottie-react";
 import React from "react";
 import { useNavigate } from "react-router";
+import loginAni from "../../../../src/assets/Animations/User Profile.json";
 
 const Login = () => {
   const { loginWithGoogle, login } = useAuth();
@@ -18,7 +20,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="grid grid-cols-1 md:grid-cols-2 items-center justify-center h-screen">
       <AuthForm
         fields={[
           { name: "email", label: "Email", type: "email" },
@@ -28,6 +30,13 @@ const Login = () => {
         onSubmit={handleLogin}
         linkText="Don't have an account? Sign up"
         linkHref="/signup"
+      />
+      <Lottie
+        animationData={loginAni}
+        style={{
+          height: 500,
+          width: 500,
+        }}
       />
     </div>
   );

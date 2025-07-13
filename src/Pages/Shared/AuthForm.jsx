@@ -41,7 +41,7 @@ function AuthFormBase({ fields, onSubmit, submitText, linkText, linkHref }) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-4 w-full max-w-sm"
+      className="space-y-4 w-full max-w-lg mx-auto"
     >
       {fields.map((field) => (
         <div key={field.name} className="space-y-1">

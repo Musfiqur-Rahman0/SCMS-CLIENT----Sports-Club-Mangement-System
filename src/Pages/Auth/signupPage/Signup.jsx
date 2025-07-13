@@ -4,6 +4,8 @@ import { AuthForm } from "@/Pages/Shared/AuthForm";
 import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router";
+import signupAni from "../../../../src/assets/Animations/User Profile.json";
+import Lottie from "lottie-react";
 
 const Signup = () => {
   const { signUp, loginWithGoogle } = useAuth();
@@ -41,6 +43,15 @@ const Signup = () => {
 
   return (
     <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center">
+        <Lottie
+          animationData={signupAni}
+          style={{
+            height: 500,
+            width: 500,
+          }}
+        />
+      </div>
       <AuthForm
         fields={[
           { name: "name", label: "Name", type: "text" },

@@ -1,3 +1,4 @@
+import Loader from "@/components/loader/Loader";
 import { AuthContext } from "@/Context/AuthContext";
 import useUserRole from "@/Hooks/useUserRole";
 import React, { use } from "react";
@@ -8,7 +9,7 @@ const PrivetRoute = ({ children, allowedRoles = [] }) => {
   const { user, isLoading } = use(AuthContext);
 
   if (roleLoading || isLoading) {
-    return <p>loading...</p>;
+    return <Loader />;
   }
 
   if (!user) {

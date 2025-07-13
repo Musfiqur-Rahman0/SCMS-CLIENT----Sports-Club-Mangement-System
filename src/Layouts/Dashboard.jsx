@@ -31,13 +31,14 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { AppSidebar } from "@/components/Dashboard/sidebar/Sidebar";
+import Loader from "@/components/loader/Loader";
 
 const Dashboard = () => {
   const { isLoading } = use(AuthContext);
   const { role, roleLoading } = useUserRole();
   const [collapsed, setCollapsed] = useState(false);
 
-  if (roleLoading || isLoading) return <div>Loading...</div>;
+  if (roleLoading || isLoading) return <Loader />;
   if (!role) return <Navigate to="/login" />;
 
   const sidebarConfig = {
