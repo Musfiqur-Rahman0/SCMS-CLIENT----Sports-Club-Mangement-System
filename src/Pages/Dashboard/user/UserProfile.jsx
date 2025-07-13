@@ -1,4 +1,5 @@
 export default function UserProfile({ user }) {
+  console.log(user);
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6">User Profile</h1>
@@ -12,7 +13,8 @@ export default function UserProfile({ user }) {
           <h2 className="text-2xl font-semibold">{user?.name}</h2>
           <p className="text-gray-600">{user?.email}</p>
           <p className="text-gray-600">
-            Registered on: {new Date(user?.created_at).toLocaleDateString()}
+            Registered on:{" "}
+            {new Date(user?.metadata?.creationTime).toLocaleDateString()}
           </p>
         </div>
       </div>

@@ -29,7 +29,7 @@ import useAuth from "@/Hooks/useAuth";
 
 // This is sample data.
 
-export function AppSidebar({ navMain, projects, ...props }) {
+export function AppSidebar({ navMain, ...props }) {
   const { user } = useAuth();
 
   return (
@@ -40,7 +40,6 @@ export function AppSidebar({ navMain, projects, ...props }) {
 
       <SidebarContent>
         <NavMain items={navMain} />
-        {projects?.length > 0 && <NavProjects projects={projects} />}
       </SidebarContent>
 
       <SidebarFooter>

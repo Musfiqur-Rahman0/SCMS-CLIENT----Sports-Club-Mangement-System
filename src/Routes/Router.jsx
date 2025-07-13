@@ -111,6 +111,15 @@ const router = createBrowserRouter([
           </PrivetRoute>
         ),
       },
+
+      {
+        path: "payment",
+        element: (
+          <PrivetRoute allowedRoles={["member"]}>
+            <ApprovedBookings />
+          </PrivetRoute>
+        ),
+      },
       {
         path: "payment/:id",
         element: (

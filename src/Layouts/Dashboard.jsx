@@ -138,7 +138,7 @@ const Dashboard = () => {
       user: [
         {
           title: "My Bookings",
-          url: "#",
+          url: "/dashboard/my-pending-bookings",
           icon: CalendarCheck,
           items: [{ title: "Pending", url: "/dashboard/my-pending-bookings" }],
         },
@@ -154,32 +154,13 @@ const Dashboard = () => {
         },
       ],
     },
-
-    projects: [
-      {
-        name: "Manage Courts",
-        url: "/dashboard/manage-courts",
-        icon: Trophy,
-      },
-      {
-        name: "Payments",
-        url: "/dashboard/payment",
-        icon: CreditCard,
-      },
-      {
-        name: "Announcements",
-        url: "/dashboard/announcements",
-        icon: Megaphone,
-      },
-    ],
   };
 
   const navMain = sidebarConfig.navMain[role] || [];
-  const projects = sidebarConfig.projects;
 
   return (
     <SidebarProvider>
-      <AppSidebar navMain={navMain} projects={projects} />
+      <AppSidebar navMain={navMain} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">

@@ -13,7 +13,6 @@ import useAuth from "@/Hooks/useAuth";
 export default function Profile() {
   const { role, roleLoading } = useUserRole();
   const { user } = useAuth();
-  const axiosSecure = useAxiosSecure();
 
   return (
     <div className="w-[80%] mx-auto p-8">
