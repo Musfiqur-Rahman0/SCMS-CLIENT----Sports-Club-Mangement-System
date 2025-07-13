@@ -32,6 +32,8 @@ import MyBookings from "@/Pages/Shared/MyBookings";
 import Profile from "@/Pages/Shared/Profile";
 
 import { createBrowserRouter } from "react-router";
+import PrivetRoute from "./PrivetRoute";
+import ForbiddenPage from "@/Pages/Forbidden/ForbiddenPage";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +49,10 @@ const router = createBrowserRouter([
         path: "courts",
         element: <CourtsPage />,
       },
+      {
+        path: "/forbidden",
+        element: <ForbiddenPage />,
+      },
     ],
   },
   {
@@ -59,35 +65,67 @@ const router = createBrowserRouter([
       },
       {
         path: "my-bookings",
-        element: <MyBookings />,
+        element: (
+          <PrivetRoute allowedRoles={["member", "user"]}>
+            <MyBookings />
+          </PrivetRoute>
+        ),
       },
       {
         path: "my-confirmed-bookings",
-        element: <ConfirmedBookings />,
+        element: (
+          <PrivetRoute allowedRoles={["member"]}>
+            <ConfirmedBookings />
+          </PrivetRoute>
+        ),
       },
       {
         path: "pending-bookings",
-        element: <ManageBookings />,
+        element: (
+          <PrivetRoute allowedRoles={["admin"]}>
+            <ManageBookings />
+          </PrivetRoute>
+        ),
       },
-      {
-        path: "approved-bookings",
-        element: <ApprovedBookings />,
-      },
+      // {
+      //   path: "approved-bookings",
+      //   element: (
+      //     <PrivetRoute allowedRoles={["member"]}>
+      //       <ApprovedBookings />
+      //     </PrivetRoute>
+      //   ),
+      // },
       {
         path: "all-confirmed-bookings",
-        element: <AllConfirmedBookings />,
+        element: (
+          <PrivetRoute allowedRoles={["admin"]}>
+            <AllConfirmedBookings />
+          </PrivetRoute>
+        ),
       },
       {
         path: "all-approved-bookings",
-        element: <AllApprovedBookings />,
+        element: (
+          <PrivetRoute allowedRoles={["admin"]}>
+            <AllApprovedBookings />
+          </PrivetRoute>
+        ),
       },
       {
         path: "payment/:id",
-        element: <MakePayments />,
+        element: (
+          <PrivetRoute allowedRoles={["member"]}>
+            <MakePayments />
+          </PrivetRoute>
+        ),
       },
       {
         path: "payment-history",
-        element: <PaymentHistory />,
+        element: (
+          <PrivetRoute allowedRoles={["member"]}>
+            <PaymentHistory />
+          </PrivetRoute>
+        ),
       },
       {
         path: "announcements",
@@ -95,27 +133,51 @@ const router = createBrowserRouter([
       },
       {
         path: "manage-members",
-        element: <ManageMembers />,
+        element: (
+          <PrivetRoute allowedRoles={["admin"]}>
+            <ManageMembers />
+          </PrivetRoute>
+        ),
       },
       {
         path: "all-users",
-        element: <AllUsers />,
+        element: (
+          <PrivetRoute allowedRoles={["admin"]}>
+            <AllUsers />
+          </PrivetRoute>
+        ),
       },
       {
         path: "add-courts",
-        element: <AddCourts />,
+        element: (
+          <PrivetRoute allowedRoles={["admin"]}>
+            <AddCourts />
+          </PrivetRoute>
+        ),
       },
       {
         path: "manage-courts",
-        element: <ManageCourts />,
+        element: (
+          <PrivetRoute allowedRoles={["admin"]}>
+            <ManageCourts />
+          </PrivetRoute>
+        ),
       },
       {
         path: "manage-coupons",
-        element: <Coupons />,
+        element: (
+          <PrivetRoute allowedRoles={["admin"]}>
+            <Coupons />
+          </PrivetRoute>
+        ),
       },
       {
         path: "make-announcement",
-        element: <MakeAnnouncement />,
+        element: (
+          <PrivetRoute allowedRoles={["admin"]}>
+            <MakeAnnouncement />
+          </PrivetRoute>
+        ),
       },
       {
         path: "announcements",
@@ -123,31 +185,59 @@ const router = createBrowserRouter([
       },
       {
         path: "make-admin",
-        element: <ChangeUserRole />,
+        element: (
+          <PrivetRoute allowedRoles={["admin"]}>
+            <ChangeUserRole />
+          </PrivetRoute>
+        ),
       },
       {
         path: "update-court/:id",
-        element: <EditCourt />,
+        element: (
+          <PrivetRoute allowedRoles={["admin"]}>
+            <EditCourt />
+          </PrivetRoute>
+        ),
       },
       {
         path: "add-coupons",
-        element: <AddCoupons />,
+        element: (
+          <PrivetRoute allowedRoles={["admin"]}>
+            <AddCoupons />
+          </PrivetRoute>
+        ),
       },
       {
         path: "manage-coupons",
-        element: <ManageCoupons />,
+        element: (
+          <PrivetRoute allowedRoles={["admin"]}>
+            <ManageCoupons />
+          </PrivetRoute>
+        ),
       },
       {
         path: "my-pending-bookings",
-        element: <MyPendingBookings />,
+        element: (
+          <PrivetRoute allowedRoles={["member", "user"]}>
+            <MyPendingBookings />
+          </PrivetRoute>
+        ),
       },
       {
         path: "my-approved-bookings",
-        element: <ApprovedBookings />,
+        element: (
+          <PrivetRoute allowedRoles={["member"]}>
+            <ApprovedBookings />
+          </PrivetRoute>
+        ),
       },
       {
         path: "my-confirmed-bookings",
-        element: <ConfirmedBookings />,
+        element: (
+          <PrivetRoute allowedRoles={["member"]}>
+            <ConfirmedBookings />
+          </PrivetRoute>
+        ),
       },
     ],
   },

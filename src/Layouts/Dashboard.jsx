@@ -97,9 +97,9 @@ const Dashboard = () => {
           ],
         },
         {
-          title: "Settings",
-          url: "/dashboard/settings",
-          icon: Settings2,
+          title: "Profile",
+          url: "/dashboard",
+          icon: Users,
         },
       ],
 
@@ -140,11 +140,7 @@ const Dashboard = () => {
           title: "My Bookings",
           url: "#",
           icon: CalendarCheck,
-          items: [
-            { title: "Pending", url: "/dashboard/my-pending-bookings" },
-            { title: "Approved", url: "/dashboard/my-approved-bookings" },
-            { title: "Confirmed", url: "/dashboard/my-confirmed-bookings" },
-          ],
+          items: [{ title: "Pending", url: "/dashboard/my-pending-bookings" }],
         },
         {
           title: "Announcements",
