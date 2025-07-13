@@ -11,7 +11,6 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK);
 
 const MakePayments = () => {
   const { id } = useParams();
-  const axiosInstence = useAxios();
 
   const { read } = useCurd(`/bookings/${id}`, ["admin", "member"]);
   const { data: selectedBookings = {}, isPending, isError } = read;

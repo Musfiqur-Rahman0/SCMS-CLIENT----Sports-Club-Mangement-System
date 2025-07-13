@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import useAxios from "@/Hooks/useAxios";
+import useAxiosSecure from "@/Hooks/useAxiosSecure";
 import useCurd from "@/Hooks/useCurd";
 import SharedTable from "@/Pages/Shared/SharedTable";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -8,7 +9,7 @@ import React from "react";
 import Swal from "sweetalert2";
 
 const ManageBookings = () => {
-  const axiosInstence = useAxios();
+  const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
   const { read } = useCurd("/bookings?status=pending", [
@@ -20,7 +21,7 @@ const ManageBookings = () => {
 
   const approveMutation = useMutation({
     mutationFn: async ({ bookingId, status, booked_by }) => {
-      const res = await axiosInstence.patch(`/bookings/${bookingId}`, {
+      const res = await axiosSecure.patch(`/bookings/${bookingId}`, {
         status,
         booked_by,
       });

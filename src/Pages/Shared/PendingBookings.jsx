@@ -1,10 +1,10 @@
-import useAxios from "@/Hooks/useAxios";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import SharedTable from "./SharedTable";
+import useAxiosSecure from "@/Hooks/useAxiosSecure";
 
 const PendingBookings = () => {
-  const axiosInstence = useAxios();
+  const axiosSecure = useAxiosSecure();
   const {
     data: pendingBookings = [],
     isPending,
@@ -12,7 +12,7 @@ const PendingBookings = () => {
   } = useQuery({
     queryKey: ["pending-bookings"],
     queryFn: async () => {
-      const res = await axiosInstence.get(`/bookings?status=pending`);
+      const res = await axiosSecure.get(`/bookings?status=pending`);
       return res.data;
     },
   });

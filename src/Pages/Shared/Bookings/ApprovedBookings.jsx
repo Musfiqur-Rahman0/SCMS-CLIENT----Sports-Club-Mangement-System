@@ -9,14 +9,18 @@ import useAuth from "@/Hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
+import useCurd from "@/Hooks/useCurd";
 
 export default function ApprovedBookings() {
-  const axiosInstence = useAxios();
+  const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
   const { email } = user;
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  // Fetch only approved bookings
+  // const { read } = useCurd("");
+  // // Fetch only approved bookings
+  // const {} = read
+
   const {
     data: bookings = [],
     isPending,
@@ -25,7 +29,7 @@ export default function ApprovedBookings() {
     queryKey: ["approved-bookings"],
     enabled: !!email,
     queryFn: async () => {
-      const res = await axiosInstence.get(
+      const res = await axiosSecure.get(
         `/bookings?status=approved&email=${email}`
       );
       return res.data;
@@ -34,7 +38,7 @@ export default function ApprovedBookings() {
 
   const mutation = useMutation({
     mutationFn: async (bookingID) => {
-      const res = await axiosInstence.delete(`/bookings/${bookingID}`);
+      const res = await axiosSecure.delete(`/bookings/${bookingID}`);
       return res.data;
     },
     onSuccess: () => {

@@ -7,8 +7,6 @@ import React from "react";
 import useCurd from "@/Hooks/useCurd";
 
 export default function AllApprovedBookings() {
-  const axiosInstence = useAxios();
-
   const { read } = useCurd("/bookings?status=approved", ["admin", "member"]);
   const { data: approvedBookings = [], isPending, isError } = read;
 

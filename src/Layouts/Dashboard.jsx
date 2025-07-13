@@ -1,7 +1,7 @@
 import { AuthContext } from "@/Context/AuthContext";
 import useUserRole from "@/Hooks/useUserRole";
 import React, { use, useState } from "react";
-import { Link, Navigate, NavLink, Outlet } from "react-router";
+import { Link, Navigate, NavLink, Outlet, useLocation } from "react-router";
 
 import {
   Users,
@@ -158,6 +158,9 @@ const Dashboard = () => {
 
   const navMain = sidebarConfig.navMain[role] || [];
 
+  const { pathname } = useLocation();
+  const pathnames = pathname.split("/").filter((x) => x);
+
   return (
     <SidebarProvider>
       <AppSidebar navMain={navMain} />
@@ -172,14 +175,19 @@ const Dashboard = () => {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
+                  <BreadcrumbLink>
+                    <Link to={"/dashboard"}>Dashboard</Link>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                </BreadcrumbItem>
+                <BreadcrumbLink>
+                  <Link
+                    to={`/dashboard/${pathnames[1]}`}
+                    className="capitalize"
+                  >
+                    {pathnames[1]}
+                  </Link>
+                </BreadcrumbLink>
               </BreadcrumbList>
             </Breadcrumb>
           </div>

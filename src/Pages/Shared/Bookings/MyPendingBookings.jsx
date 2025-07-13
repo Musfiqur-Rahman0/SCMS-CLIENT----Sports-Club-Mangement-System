@@ -5,10 +5,12 @@ import React from "react";
 import SharedTable from "../SharedTable";
 import { Button } from "@/components/ui/button";
 import Swal from "sweetalert2";
+import useAxiosSecure from "@/Hooks/useAxiosSecure";
+import axios from "axios";
 
 const MyPendingBookings = () => {
   const { user } = useAuth();
-  const axiosInstence = useAxios();
+  const axiosSecure = useAxiosSecure();
   const { email } = user;
 
   const queryClient = useQueryClient();
@@ -20,7 +22,7 @@ const MyPendingBookings = () => {
   } = useQuery({
     queryKey: ["mypending-bookings", email],
     queryFn: async () => {
-      const res = await axiosInstence.get(
+      const res = await axiosSecure.get(
         `/bookings?email=${email}&status=pending`
       );
       return res.data;
@@ -29,7 +31,7 @@ const MyPendingBookings = () => {
 
   const mutation = useMutation({
     mutationFn: async (bookingID) => {
-      const res = await axiosInstence.delete(`/bookings/${bookingID}`);
+      const res = await axiosSecure.delete(`/bookings/${bookingID}`);
       return res.data;
     },
     onSuccess: () => {
