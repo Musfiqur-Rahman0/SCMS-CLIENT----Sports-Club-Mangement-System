@@ -51,7 +51,6 @@ const AllUsers = () => {
         setQuery={setSearchName}
         handleSearch={handleSearch}
       />
-
       {isPending && <p>Loading users...</p>}
       {isError && <p>Error loading users...</p>}
 

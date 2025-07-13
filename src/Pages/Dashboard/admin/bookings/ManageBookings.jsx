@@ -2,22 +2,25 @@ import { Button } from "@/components/ui/button";
 import useAxios from "@/Hooks/useAxios";
 import useAxiosSecure from "@/Hooks/useAxiosSecure";
 import useCurd from "@/Hooks/useCurd";
+import SearchInput from "@/Pages/Shared/SearchInput";
 import SharedTable from "@/Pages/Shared/SharedTable";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BookType } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 const ManageBookings = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
-
+  const [searchTitle, setSearchTitle] = useState("");
+  const [pendingBookings, setPendingBookings] = useState([]);
   const { read } = useCurd("/bookings?status=pending", [
     "user",
     "admin",
     "member",
   ]);
-  const { data: pendingBookings, isPending, isError } = read;
+
+  const { data, isPending, isError } = read;
 
   const approveMutation = useMutation({
     mutationFn: async ({ bookingId, status, booked_by }) => {
@@ -68,27 +71,14 @@ const ManageBookings = () => {
     });
   };
 
-  const handleReject = (bookingId) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Do you really want to Reject this booking?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, Reject it!",
-      cancelButtonText: "Cancel",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        approveMutation.mutate({
-          bookingId: bookingId,
-          status: "rejected",
-        });
-      }
-    });
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    const res = await axiosSecure.get(
+      `/bookings?title=${searchTitle}&status=pending`
+    );
+    setPendingBookings(res.data);
   };
-
-  if (isPending) {
-    return <p>loading...</p>;
-  }
+  console.log(pendingBookings);
 
   const headItems = [
     "#",
@@ -130,11 +120,27 @@ const ManageBookings = () => {
     ],
   }));
 
+  useEffect(() => {
+    if (data) {
+      setPendingBookings(data);
+    }
+  }, [data]);
+
+  if (isPending) {
+    return <p>loading...</p>;
+  }
+
   return (
-    <div className="p-6">
+    <div className="p-6 space-y-5">
       <h2 className="text-xl font-bold mb-4">
         Pending Bookings ({pendingBookings.length})
       </h2>
+      <SearchInput
+        query={searchTitle}
+        setQuery={setSearchTitle}
+        handleSearch={handleSearch}
+      />
+
       <SharedTable headItems={headItems} bodyItems={bodyItems} />
     </div>
   );
