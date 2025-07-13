@@ -25,9 +25,32 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import useAuth from "@/Hooks/useAuth";
+import Swal from "sweetalert2";
 
 export function NavUser({ user }) {
   const { isMobile } = useSidebar();
+
+  const { logout } = useAuth();
+
+  const handleLogOut = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You will log out from this app",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, !",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        logout();
+        Swal.fire(
+          "Log out sucesfull",
+          "You have loged out sucessfully",
+          "success"
+        );
+      }
+    });
+  };
 
   return (
     <SidebarMenu>
@@ -92,7 +115,7 @@ export function NavUser({ user }) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogOut}>
               <LogOut />
               Log out
             </DropdownMenuItem>

@@ -63,7 +63,20 @@ export default function ApprovedBookings() {
   });
 
   const handleCencelBooking = (bookingID) => {
-    mutation.mutate(bookingID);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to remove this booking? This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, remove it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        mutation.mutate(bookingID);
+        Swal.fire("Deleted", "Sucessfully deleted booking", "success");
+      }
+    });
   };
 
   const headItems = [

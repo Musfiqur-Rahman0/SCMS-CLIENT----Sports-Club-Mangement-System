@@ -19,7 +19,6 @@ export default function CheckoutForm({ selectedBookings }) {
 
   const amount = selectedBookings.totalPrice;
   const amountInCents = amount * 100;
-  // console.log(amountInCents);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -96,8 +95,6 @@ export default function CheckoutForm({ selectedBookings }) {
       setIsMakingPayment(false);
     }
   };
-
-  // console.log()
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
