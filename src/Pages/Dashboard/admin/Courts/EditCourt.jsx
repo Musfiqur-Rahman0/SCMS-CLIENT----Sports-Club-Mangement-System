@@ -81,24 +81,41 @@ export default function EditCourt() {
   }, [selectedCourt, reset]);
 
   const handleFormSubmit = async (data) => {
-    const updatedCourt = {
-      ...data,
-      deadline: deadline ? deadline.toISOString() : null,
-    };
+    const file = data.image[0];
 
-    const res = await axiosSecure.put(`/update-court/${id}`, updatedCourt);
+    const formData = new FormData();
+    formData.append("image", file);
 
-    if (res.data.modifiedCount) {
-      Swal.fire({
-        title: "Updated!",
-        text: "Court information has been successfully updated.",
-        icon: "success",
-        confirmButtonText: "OK",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate("/dashboard/manage-courts");
-        }
-      });
+    try {
+      const result = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${
+          import.meta.env.VITE_IMGBB_API_KEY
+        }`,
+        formData
+      );
+      const photoURL = result.data.data.display_url;
+      data.image = photoURL;
+      const updatedCourt = {
+        ...data,
+        deadline: deadline ? deadline.toISOString() : null,
+      };
+
+      const res = await axiosSecure.put(`/update-court/${id}`, updatedCourt);
+      if (res.data.modifiedCount) {
+        Swal.fire({
+          title: "Updated!",
+          text: "Court information has been successfully updated.",
+          icon: "success",
+          confirmButtonText: "OK",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate("/dashboard/manage-courts");
+          }
+        });
+      }
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      Swal.fire("error!!", "Error updating court data", "error");
     }
   };
 
@@ -276,8 +293,9 @@ export default function EditCourt() {
           Court Image URL
         </Label>
         <Input
-          {...register("image", { required: "Image URL is required" })}
-          placeholder="https://..."
+          id={"image"}
+          type={"file"}
+          {...register("image", { required: true })}
         />
         {errors.image && (
           <p className="text-sm text-red-500 mt-1">{errors.image.message}</p>

@@ -1,4 +1,18 @@
+import useAxiosSecure from "@/Hooks/useAxiosSecure";
+import useCurd from "@/Hooks/useCurd";
+import { useQuery } from "@tanstack/react-query";
+
 export default function MemberProfile({ user }) {
+  // const axiosSecure = useAxiosSecure();
+
+  const { read } = useCurd(`/users?email=${user?.email}`, ["member"]);
+
+  const { data: currentuser = {}, isPending, isError } = read;
+
+  if (isPending) {
+    return <p>loading...</p>;
+  }
+
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6">Member Profile</h1>
@@ -12,8 +26,7 @@ export default function MemberProfile({ user }) {
           <h2 className="text-2xl font-semibold">{user?.name}</h2>
           <p className="text-gray-600">{user?.email}</p>
           <p className="text-gray-600">
-            Member since:{" "}
-            {new Date(user?.metadata?.creationTime).toLocaleDateString()}
+            Member since: {new Date(currentuser.member_on).toLocaleDateString()}
           </p>
         </div>
       </div>

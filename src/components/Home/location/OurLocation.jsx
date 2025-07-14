@@ -3,6 +3,9 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const clubLat = 23.8103; // Example: Dhaka
 const clubLng = 90.4125;
@@ -39,24 +42,33 @@ export default function OurLocation() {
 
   return (
     <section className="py-16">
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-3xl font-bold mb-4">Find Us On</h2>
 
-        <div className="flex mb-4">
-          <input
+        <div className="flex flex-col sm:flex-row gap-2 mb-8">
+          <Input
             type="text"
             placeholder="Search for a place..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border p-2 flex-1 rounded-l"
+            className="flex-1"
           />
-          <button
-            onClick={handleSearch}
-            className="bg-blue-600 text-white px-4 rounded-r"
-          >
+          <Button onClick={handleSearch} className="w-full sm:w-auto">
             Search
-          </button>
+          </Button>
         </div>
+
+        <Card className="mb-8 w-full">
+          <CardHeader>
+            <CardTitle className="text-xl">Our Location</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 ">
+            <p>🏠 Address: 123 Sports Avenue, Dhaka, Bangladesh</p>
+            <p>🕒 Hours: Mon - Fri, 8:00 AM - 10:00 PM</p>
+            <p>📞 Contact: +880 1234-567890</p>
+            <p>📧 Email: info@yoursportsclub.com</p>
+          </CardContent>
+        </Card>
 
         <MapContainer
           center={[clubLat, clubLng]}
@@ -69,12 +81,10 @@ export default function OurLocation() {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
 
-          {/* Club Marker */}
           <Marker position={[clubLat, clubLng]}>
             <Popup>Your Sports Club</Popup>
           </Marker>
 
-          {/* Search Marker */}
           {searchPos && (
             <Marker position={searchPos}>
               <Popup>

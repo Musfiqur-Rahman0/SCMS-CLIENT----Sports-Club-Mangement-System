@@ -42,8 +42,8 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="flex items-center justify-center">
+    <div className="grid grid-cols-1 md:grid-cols-2 items-center justify-center h-screen">
+      <div className="hidden md:flex items-center justify-center">
         <Lottie
           animationData={signupAni}
           style={{
@@ -52,18 +52,20 @@ const Signup = () => {
           }}
         />
       </div>
-      <AuthForm
-        fields={[
-          { name: "name", label: "Name", type: "text" },
-          { name: "email", label: "Email", type: "email" },
-          { name: "password", label: "Password", type: "password" },
-          { name: "photo", label: "Profile Photo", type: "file" },
-        ]}
-        submitText="Sign Up"
-        onSubmit={handleSignup}
-        linkText="Already have an account? Login"
-        linkHref="/login"
-      />
+      <div className="p-4 md:p-0">
+        <AuthForm
+          fields={[
+            { name: "name", label: "Name", type: "text" },
+            { name: "email", label: "Email", type: "email" },
+            { name: "password", label: "Password", type: "password" },
+            { name: "photo", label: "Profile Photo", type: "file" },
+          ]}
+          submitText="Sign Up"
+          onSubmit={handleSignup}
+          linkText="Already have an account? Login"
+          linkHref="/login"
+        />
+      </div>
     </div>
   );
 };

@@ -4,13 +4,7 @@ import React, { use, useState } from "react";
 import useAxios from "@/Hooks/useAxios";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { AuthContext } from "@/Context/AuthContext";
 import { useNavigate } from "react-router";
 import BookNowModal from "@/components/courts/BookNowModal";
@@ -26,18 +20,6 @@ export default function CourtsPage() {
   const { read } = useCurd("/courts", ["member", "admin", "user"]);
 
   const { data: courts = [], isPending, isError } = read;
-
-  // const {
-  //   data: courts = [],
-  //   isPending,
-  //   isError,
-  // } = useQuery({
-  //   queryKey: ["All Courts"],
-  //   queryFn: async () => {
-  //     const res = await axiosInstance.get("/courts");
-  //     return res.data;
-  //   },
-  // });
 
   if (isPending) {
     return <p className="text-center mt-8">Loading courts...</p>;
