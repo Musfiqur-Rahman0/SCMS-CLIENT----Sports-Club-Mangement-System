@@ -23,14 +23,27 @@ import useAxiosSecure from "@/Hooks/useAxiosSecure";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import useAuth from "@/Hooks/useAuth";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import useCurd from "@/Hooks/useCurd";
 
 export default function BookNowModal({ open, onClose, court }) {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
+  const { slotTimes } = court;
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [slots, setSlots] = useState(1);
+  const [selectedSlotTime, setSelectedSlotTime] = useState("");
   const { user } = useAuth();
+  const { create } = useCurd("/bookings", ["member", "user", "admin"]);
+
+  const { mutate: bookCourt } = create;
 
   const pricePerSession = court?.price || 0;
   const totalPrice = slots * pricePerSession;
@@ -39,6 +52,7 @@ export default function BookNowModal({ open, onClose, court }) {
     defaultValues: {
       slots: 1,
       date: null,
+      slotTime: "",
     },
   });
 
@@ -69,14 +83,18 @@ export default function BookNowModal({ open, onClose, court }) {
       pricePerSession: pricePerSession,
       slots: slots,
       totalPrice: totalPrice,
-      date: selectedDate.toISOString(),
+      date: selectedDate?.toISOString(),
+      slotTime: selectedSlotTime,
       status: "pending",
       userName: user?.displayName,
       userEmail: user?.email,
       paymentStatus: "unpaid",
     };
 
-    bookingMutation.mutate(bookingData);
+    console.log(bookingData);
+
+    bookCourt(bookingData);
+    // bookingMutation.mutate(bookingData);
   };
 
   return (
@@ -144,13 +162,37 @@ export default function BookNowModal({ open, onClose, court }) {
           </div>
 
           <div>
+            <Label>Select Slot Time</Label>
+            <Select
+              value={selectedSlotTime}
+              onValueChange={(value) => {
+                setSelectedSlotTime(value);
+                setValue("slotTime", value);
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a time" />
+              </SelectTrigger>
+              <SelectContent>
+                {slotTimes?.map((time, idx) => (
+                  <SelectItem key={idx} value={time}>
+                    {time}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
             <Label>Total Price</Label>
             <Input value={`$${totalPrice}`} readOnly />
           </div>
 
           <Button
             onClick={handleSubmit(onSubmit)}
-            disabled={bookingMutation.isPending || !selectedDate}
+            disabled={
+              bookingMutation.isPending || !selectedDate || !selectedSlotTime
+            }
           >
             {bookingMutation.isPending ? "Booking..." : "Submit Booking"}
           </Button>

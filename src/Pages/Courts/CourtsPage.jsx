@@ -4,11 +4,18 @@ import React, { use, useState } from "react";
 import useAxios from "@/Hooks/useAxios";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { AuthContext } from "@/Context/AuthContext";
 import { useNavigate } from "react-router";
 import BookNowModal from "@/components/courts/BookNowModal";
 import useCurd from "@/Hooks/useCurd";
+import CourtCard from "../Shared/CourtCard";
 
 export default function CourtsPage() {
   const axiosInstance = useAxios();
@@ -37,24 +44,15 @@ export default function CourtsPage() {
     }
   };
 
+  console.log(courts);
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+    <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
       {courts.map((court) => (
-        <div
+        <CourtCard
           key={court._id}
-          className="border rounded-lg shadow p-4 flex flex-col space-y-4"
-        >
-          <img
-            src={court.image}
-            alt={court.name}
-            className="w-full h-40 object-cover rounded"
-          />
-          <h2 className="text-xl font-semibold">{court.name}</h2>
-          <p>Type: {court.type}</p>
-          <p>Price per Session: ${court.price}</p>
-          {/* You can add slots info here if available */}
-          <Button onClick={() => setSelectedCourt(court)}>Book Now</Button>
-        </div>
+          court={court}
+          setSelectedCourt={setSelectedCourt}
+        />
       ))}
 
       {/* Book Now Modal */}
