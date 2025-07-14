@@ -21,7 +21,7 @@ const MakePayments = () => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-8">
+    <div className="max-w-7xl mx-auto p-8">
       <h1 className="text-2xl font-bold mb-4">Make Payment</h1>
       <p className="mb-6 text-gray-600">
         Please complete your payment for :{" "}
