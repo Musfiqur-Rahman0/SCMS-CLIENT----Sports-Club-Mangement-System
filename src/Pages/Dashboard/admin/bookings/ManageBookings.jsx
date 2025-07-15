@@ -52,6 +52,33 @@ const ManageBookings = () => {
     },
   });
 
+  const rejectMutation = useMutation({
+    mutationFn: async ({ bookingId }) => {
+      const res = await axiosSecure.delete(`/bookings/${bookingId}`);
+      return res.data;
+    },
+    onSuccess: () => {
+      // ✅ Refetch bookings to reflect changes
+      queryClient.invalidateQueries(["approved-bookings"]);
+      queryClient.invalidateQueries(["pending-bookings"]);
+
+      // ✅ Or show a toast or SweetAlert
+      Swal.fire({
+        icon: "success",
+        title: "Status updated!",
+        text: "The booking status has been updated successfully.",
+      });
+    },
+    onError: (error) => {
+      console.error(error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong while updating status!",
+      });
+    },
+  });
+
   const handleApprove = (booking) => {
     Swal.fire({
       title: "Are you sure?",
@@ -66,6 +93,23 @@ const ManageBookings = () => {
           bookingId: booking._id,
           status: "approved",
           booked_by: booking.userEmail,
+        });
+      }
+    });
+  };
+
+  const handleReject = (booking) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to Reject this booking?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        rejectMutation.mutate({
+          bookingId: booking._id,
         });
       }
     });
@@ -111,7 +155,7 @@ const ManageBookings = () => {
         <Button
           variant="destructive"
           size="sm"
-          onClick={() => handleReject(booking._id)}
+          onClick={() => handleReject(booking)}
           disabled={approveMutation.isPending}
         >
           Reject
