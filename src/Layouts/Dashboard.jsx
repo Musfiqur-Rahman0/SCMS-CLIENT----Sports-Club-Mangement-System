@@ -67,7 +67,7 @@ const Dashboard = () => {
           items: [
             { title: "Manage Members", url: "/dashboard/manage-members" },
             { title: "All Users", url: "/dashboard/all-users" },
-            { title: "Make Admin", url: "/dashboard/make-admin" },
+            // { title: "Make Admin", url: "/dashboard/make-admin" },
           ],
         },
         {

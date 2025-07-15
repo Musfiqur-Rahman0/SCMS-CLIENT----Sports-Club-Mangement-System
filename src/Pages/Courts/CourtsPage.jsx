@@ -16,6 +16,7 @@ import { useNavigate } from "react-router";
 import BookNowModal from "@/components/courts/BookNowModal";
 import useCurd from "@/Hooks/useCurd";
 import CourtCard from "../Shared/CourtCard";
+import Loader from "@/components/loader/Loader";
 
 export default function CourtsPage() {
   const axiosInstance = useAxios();
@@ -29,7 +30,7 @@ export default function CourtsPage() {
   const { data: courts = [], isPending, isError } = read;
 
   if (isPending) {
-    return <p className="text-center mt-8">Loading courts...</p>;
+    return <Loader />;
   }
 
   if (isError) {

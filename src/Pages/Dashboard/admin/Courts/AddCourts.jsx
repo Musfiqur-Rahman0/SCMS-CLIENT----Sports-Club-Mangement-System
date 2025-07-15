@@ -21,13 +21,15 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Textarea } from "@/components/ui/textarea";
-import useAxios from "@/Hooks/useAxios";
 import useAxiosSecure from "@/Hooks/useAxiosSecure";
 import { generateImageUrl } from "@/lib/utils";
 import Swal from "sweetalert2";
 
 export default function AddCourts() {
   const [date, setDate] = useState();
+  const [slots, setSlots] = useState([]);
+  const [slotInput, setSlotInput] = useState("");
+
   const axiosSecure = useAxiosSecure();
 
   const {
@@ -51,27 +53,42 @@ export default function AddCourts() {
     },
   });
 
+  const handleAddSlot = () => {
+    if (slotInput.trim()) {
+      setSlots([...slots, slotInput.trim()]);
+      setSlotInput("");
+    }
+  };
+
+  const handleRemoveSlot = (index) => {
+    const newSlots = [...slots];
+    newSlots.splice(index, 1);
+    setSlots(newSlots);
+  };
+
   const onSubmit = async (data) => {
     const file = data.image[0];
-    // a utility function what upload the given image file to the imgbb and give the url
     const imageUrl = await generateImageUrl(file);
+
     data.image = imageUrl;
     data.deadline = data.deadline.toISOString();
-    const newCourts = {
+    data.slotTimes = slots; // ✅ pass slots as array
+
+    const newCourt = {
       ...data,
       added_on: new Date().toISOString(),
     };
 
-    const res = await axiosSecure.post("/add-courts", newCourts);
+    const res = await axiosSecure.post("/add-courts", newCourt);
     if (res.data.insertedId) {
       Swal.fire({
         title: "Success!",
         text: "Court has been added successfully.",
         icon: "success",
         confirmButtonText: "OK",
-        showConfirmButton: true,
       });
       reset();
+      setSlots([]);
     }
   };
 
@@ -80,6 +97,7 @@ export default function AddCourts() {
       <h1 className="text-3xl font-bold mb-8">Add New Court</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {/* Your existing fields */}
         <div>
           <Label htmlFor="name" className="mb-1 block">
             Court Name
@@ -110,6 +128,8 @@ export default function AddCourts() {
                 <SelectItem value="Tennis">Tennis</SelectItem>
                 <SelectItem value="Badminton">Badminton</SelectItem>
                 <SelectItem value="Football">Football</SelectItem>
+                <SelectItem value="Basketball">Basketball</SelectItem>
+                <SelectItem value="Squash">Squash</SelectItem>
               </SelectContent>
             </Select>
             {errors.type && (
@@ -173,6 +193,41 @@ export default function AddCourts() {
           )}
         </div>
 
+        {/* ✅ Slot Times Section */}
+        <div>
+          <Label htmlFor="slotTimes" className="mb-1 block">
+            Slot Times
+          </Label>
+          <div className="flex gap-2 mb-2">
+            <Input
+              value={slotInput}
+              onChange={(e) => setSlotInput(e.target.value)}
+              placeholder="E.g., 07:00AM-08:00AM"
+            />
+            <Button type="button" onClick={handleAddSlot}>
+              Add Slot
+            </Button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {slots.map((slot, idx) => (
+              <span
+                key={idx}
+                className="inline-flex items-center px-3 py-1 bg-gray-200 rounded-full text-sm"
+              >
+                {slot}
+                <button
+                  type="button"
+                  onClick={() => handleRemoveSlot(idx)}
+                  className="ml-2 text-red-500"
+                >
+                  &times;
+                </button>
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Deadline */}
         <div>
           <Label htmlFor="deadline" className="mb-1 block">
             Booking Deadline

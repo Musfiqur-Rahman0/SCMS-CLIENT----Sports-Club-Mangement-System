@@ -348,7 +348,7 @@ export default function ManageCoupons() {
               />
             </div>
 
-            <Button type="submit">Add Coupon</Button>
+            <Button type="submit">Update Coupon</Button>
           </form>
         </DialogContent>
       </Dialog>

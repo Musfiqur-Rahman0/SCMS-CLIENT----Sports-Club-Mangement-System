@@ -26,24 +26,44 @@ export default function CheckoutForm({ selectedBookings }) {
 
   const handleApplyCoupon = async () => {
     if (!coupon) return;
+
     try {
       const res = await axiosSecure.post("/coupons/validate", { code: coupon });
       const couponData = res.data;
-      if (couponData.valid) {
-        const discountAmount =
-          (selectedBookings.totalPrice * couponData.discountPercentage) / 100;
-        const newPrice = selectedBookings.totalPrice - discountAmount;
-        setDiscountedPrice(newPrice);
-        Swal.fire(
-          "Success!",
-          `Coupon applied! ${couponData.discountPercentage}% off.`,
-          "success"
+
+      if (selectedBookings.totalPrice < couponData.minimunAmmount) {
+        console.log("ok ");
+        return Swal.fire(
+          "Insuficent Amount",
+          `Minimum ammount to use this coupon is ${couponData.minimunAmmount}`,
+          "info"
         );
+      } else if (couponData.valid) {
+        if (couponData.discountType === "fixed") {
+          console.log(couponData.discountType);
+          const newPrice = selectedBookings.totalPrice - couponData.discount;
+          setDiscountedPrice(newPrice);
+          Swal.fire(
+            "Success!",
+            `Coupon applied! ${couponData.discount} off.`,
+            "success"
+          );
+        } else {
+          const discountAmount =
+            (selectedBookings.totalPrice * couponData.discount) / 100;
+          const newPrice = selectedBookings.totalPrice - discountAmount;
+          setDiscountedPrice(newPrice);
+          Swal.fire(
+            "Success!",
+            `Coupon applied! ${couponData.discount}% off.`,
+            "success"
+          );
+        }
       } else {
         Swal.fire("Invalid", "Invalid coupon code.", "error");
       }
     } catch (err) {
-      Swal.fire("Error", "Could not validate coupon.", "error");
+      Swal.fire("Error", err.response.data.message, "error");
     }
   };
 

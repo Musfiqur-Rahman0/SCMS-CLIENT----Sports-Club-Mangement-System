@@ -4,6 +4,7 @@ import React from "react";
 import useAxiosSecure from "@/Hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import useCurd from "@/Hooks/useCurd";
+import { Link } from "react-router";
 
 export default function Coupons() {
   const { read } = useCurd("/coupons", ["admin", "user", "member"]);
@@ -31,9 +32,12 @@ export default function Coupons() {
             {coupon.description && (
               <p className="text-xs text-gray-500">{coupon.description}</p>
             )}
-            <span className="inline-block mt-3 px-3 py-1 bg-primary text-white text-xs rounded">
+            <Link
+              to={"/courts"}
+              className="inline-block mt-3 px-3 py-1 bg-primary text-white text-xs rounded"
+            >
               Use Now
-            </span>
+            </Link>
           </div>
         ))}
       </div>

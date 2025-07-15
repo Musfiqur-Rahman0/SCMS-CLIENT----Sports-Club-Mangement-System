@@ -26,6 +26,7 @@ import { useNavigate, useParams } from "react-router";
 import useAxiosSecure from "@/Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import useCurd from "@/Hooks/useCurd";
+import axios from "axios";
 
 export default function EditCourt() {
   const [deadline, setDeadline] = useState(null);
@@ -160,6 +161,8 @@ export default function EditCourt() {
               <SelectItem value="Tennis">Tennis</SelectItem>
               <SelectItem value="Badminton">Badminton</SelectItem>
               <SelectItem value="Football">Football</SelectItem>
+              <SelectItem value="Basketball">Basketball</SelectItem>
+              <SelectItem value="Squash">Squash</SelectItem>
             </SelectContent>
           </Select>
           {errors.type && (
@@ -217,6 +220,12 @@ export default function EditCourt() {
         {errors.price && (
           <p className="text-sm text-red-500 mt-1">{errors.price.message}</p>
         )}
+      </div>
+
+      <div>
+        <Label htmlFor="slotTimes" className="mb-1 block">
+          Slot Times
+        </Label>
       </div>
 
       <div>
