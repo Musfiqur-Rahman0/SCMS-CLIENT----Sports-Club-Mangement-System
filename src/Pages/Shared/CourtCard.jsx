@@ -7,8 +7,20 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import useAuth from "@/Hooks/useAuth";
+import { useNavigate } from "react-router";
 
 const CourtCard = ({ court, setSelectedCourt }) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleCourtBook = (court) => {
+    if (user) {
+      setSelectedCourt(court);
+    } else {
+      navigate("/login");
+    }
+  };
   return (
     <Card
       key={court._id}
@@ -49,7 +61,7 @@ const CourtCard = ({ court, setSelectedCourt }) => {
         </div>
       </CardContent>
       <CardFooter className="p-4">
-        <Button className="w-full" onClick={() => setSelectedCourt(court)}>
+        <Button className="w-full" onClick={() => handleCourtBook(court)}>
           Book Now
         </Button>
       </CardFooter>
