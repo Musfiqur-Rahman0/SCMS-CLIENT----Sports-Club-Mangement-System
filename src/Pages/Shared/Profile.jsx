@@ -15,7 +15,7 @@ export default function Profile() {
   const { user } = useAuth();
 
   return (
-    <div className="w-[80%] mx-auto p-8">
+    <div className="w-[90%] mx-auto p-4 md:p-8">
       {role === "admin" && <AdminProfile user={user} stats={{}} />}
       {role === "member" && <MemberProfile user={user} />}
       {role === "user" && <UserProfile user={user} />}

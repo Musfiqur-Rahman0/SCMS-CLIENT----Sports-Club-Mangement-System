@@ -7,7 +7,7 @@ export default function AdminProfile({ user }) {
   const { data: adminStats = {}, isPending, isError } = read;
 
   return (
-    <div>
+    <div className="w-full">
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
       <div className="flex items-center gap-6 mb-8">
         <img
@@ -23,7 +23,7 @@ export default function AdminProfile({ user }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         {isPending ? (
           <p>loading adminStats...</p>
         ) : (

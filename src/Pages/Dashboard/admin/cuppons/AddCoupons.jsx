@@ -69,7 +69,7 @@ const AddCoupons = () => {
   };
 
   return (
-    <div className="w-[80%] mx-auto p-8">
+    <div className="w-[95%] md:w-[80%] mx-auto p-4 md:p-8">
       <h2 className="text-2xl font-bold mb-6">Add New Coupon</h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
