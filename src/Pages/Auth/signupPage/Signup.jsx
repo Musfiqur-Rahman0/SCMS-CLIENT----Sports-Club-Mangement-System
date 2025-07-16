@@ -27,7 +27,10 @@ const Signup = () => {
         formData
       );
       const photoURL = res.data.data.display_url;
-      signUp(email, password, name, photoURL);
+      const result = await signUp(email, password, name, photoURL);
+      if (result.success) {
+        navigate("/login");
+      }
 
       const newUser = {
         name,

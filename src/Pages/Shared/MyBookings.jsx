@@ -23,10 +23,6 @@ const MyBookings = () => {
     },
   });
 
-  console.log(user.email);
-
-  console.log(myBookings);
-
   if (isPending) {
     return <p>Loading your bookings...</p>;
   }

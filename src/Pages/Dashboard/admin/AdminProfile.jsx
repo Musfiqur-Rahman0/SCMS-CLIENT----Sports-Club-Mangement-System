@@ -30,7 +30,7 @@ export default function AdminProfile({ user }) {
           <>
             <Card>
               <CardHeader>
-                <CardTitle>Total Courts</CardTitle>
+                <CardTitle className={"pt-2"}>Total Courts</CardTitle>
               </CardHeader>
               <CardContent className="text-3xl font-bold">
                 {adminStats.totalCourts ?? 0}
@@ -38,7 +38,7 @@ export default function AdminProfile({ user }) {
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle> Users</CardTitle>
+                <CardTitle className={"pt-2"}> Users</CardTitle>
               </CardHeader>
               <CardContent className="text-3xl font-bold">
                 {adminStats.users ?? 0}
@@ -46,7 +46,7 @@ export default function AdminProfile({ user }) {
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle>Total Members</CardTitle>
+                <CardTitle className={"pt-2"}>Total Members</CardTitle>
               </CardHeader>
               <CardContent className="text-3xl font-bold">
                 {adminStats.totalMembers ?? 0}
@@ -54,7 +54,7 @@ export default function AdminProfile({ user }) {
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle>Total Users</CardTitle>
+                <CardTitle className={"pt-2"}>Total Users</CardTitle>
               </CardHeader>
               <CardContent className="text-3xl font-bold">
                 {adminStats.totalUsers ?? 0}
@@ -62,7 +62,7 @@ export default function AdminProfile({ user }) {
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle>Total Bookings</CardTitle>
+                <CardTitle className={"pt-2"}>Total Bookings</CardTitle>
               </CardHeader>
               <CardContent className="text-3xl font-bold">
                 {adminStats.totalBookings ?? 0}

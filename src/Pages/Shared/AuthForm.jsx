@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import useAuth from "@/Hooks/useAuth";
 import useAxios from "@/Hooks/useAxios";
 import axios from "axios";
@@ -19,12 +19,16 @@ function AuthFormBase({ fields, onSubmit, submitText, linkText, linkHref }) {
 
   const { loginWithGoogle } = useAuth();
   const axiosInstance = useAxios();
+  const navigate = useNavigate();
 
   const handleGoogleLogin = async () => {
     try {
       const res = await loginWithGoogle();
-      const user = res?.user;
+      if (res.success) {
+        navigate("/");
+      }
 
+      const user = res?.result?.user;
       const newUser = {
         name: user?.displayName,
         email: user?.email,

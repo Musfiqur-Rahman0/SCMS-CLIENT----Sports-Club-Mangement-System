@@ -32,7 +32,6 @@ export default function CheckoutForm({ selectedBookings }) {
       const couponData = res.data;
 
       if (selectedBookings.totalPrice < couponData.minimunAmmount) {
-        console.log("ok ");
         return Swal.fire(
           "Insuficent Amount",
           `Minimum ammount to use this coupon is ${couponData.minimunAmmount}`,
@@ -40,7 +39,6 @@ export default function CheckoutForm({ selectedBookings }) {
         );
       } else if (couponData.valid) {
         if (couponData.discountType === "fixed") {
-          console.log(couponData.discountType);
           const newPrice = selectedBookings.totalPrice - couponData.discount;
           setDiscountedPrice(newPrice);
           Swal.fire(

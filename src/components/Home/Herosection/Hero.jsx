@@ -5,7 +5,6 @@ import { Autoplay, EffectFade, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
-import testImage from "../../../../src/assets/Images/ipun.jpg";
 import { motion } from "framer-motion";
 
 const slides = [

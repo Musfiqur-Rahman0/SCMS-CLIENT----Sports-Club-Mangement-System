@@ -1,17 +1,26 @@
 "use client";
 
 import React from "react";
-import useAxiosSecure from "@/Hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import useCurd from "@/Hooks/useCurd";
 import { Link } from "react-router";
+import useAxios from "@/Hooks/useAxios";
 
 export default function Coupons() {
-  const { read } = useCurd("/coupons", ["admin", "user", "member"]);
+  const axiosInstence = useAxios();
+  const {
+    data: coupons = [],
+    isPending,
+    isError,
+  } = useQuery({
+    queryKey: ["coupons"],
+    queryFn: async () => {
+      const res = await axiosInstence.get("/coupons");
+      return res.data;
+    },
+  });
 
-  const { data: coupons = [], isPending, isError } = read;
-
-  if (isPending) return <p>Loading coupons...</p>;
+  if (isPending) return <p>Loading coupons data...</p>;
   if (isError) return <p>Failed to load coupons.</p>;
 
   return (

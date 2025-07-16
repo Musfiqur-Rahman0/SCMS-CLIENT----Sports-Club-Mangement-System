@@ -16,7 +16,7 @@ const useAuth = () => {
   const signUp = async (email, password, first_name, photoURL) => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      await updateProfile(auth.currentUser, {
+      const result = await updateProfile(auth.currentUser, {
         displayName: first_name,
         photoURL: photoURL,
       });
@@ -24,6 +24,7 @@ const useAuth = () => {
         title: "Registration successful!",
         icon: "success",
       });
+      return { success: true, result };
     } catch (err) {
       console.error(err);
       Swal.fire({
@@ -40,7 +41,7 @@ const useAuth = () => {
         title: "Login successful!",
         icon: "success",
       });
-      return result;
+      return { success: true, result };
     } catch (err) {
       console.error(err);
       Swal.fire({
@@ -57,7 +58,7 @@ const useAuth = () => {
         title: "Login successful!",
         icon: "success",
       });
-      return result;
+      return { success: true, result };
     } catch (err) {
       console.error(err);
       Swal.fire({
@@ -69,7 +70,8 @@ const useAuth = () => {
 
   const logout = async () => {
     try {
-      await signOut(auth);
+      const result = await signOut(auth);
+      return { success: true, result };
     } catch (err) {
       console.error(err);
     }

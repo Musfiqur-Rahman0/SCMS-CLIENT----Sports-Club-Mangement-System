@@ -52,8 +52,6 @@ export default function Announcements() {
   };
 
   const handleUpdate = (data) => {
-    console.log(data);
-
     data.modified_on = new Date().toISOString();
 
     const id = selectedAnnounement._id;

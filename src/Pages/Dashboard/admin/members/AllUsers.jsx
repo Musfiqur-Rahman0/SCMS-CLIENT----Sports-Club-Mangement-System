@@ -26,8 +26,6 @@ const AllUsers = () => {
     ],
   }));
 
-  // console.log(users);
-
   const handleSearch = async (e) => {
     e.preventDefault();
     const res = await axiosSecure.get(`/users?name=${searchName}`);
@@ -53,7 +51,6 @@ const AllUsers = () => {
       />
       {isPending && <p>Loading users...</p>}
       {isError && <p>Error loading users...</p>}
-
       {!isPending && !isError && (
         <SharedTable headItems={headItems} bodyItems={bodyItems} />
       )}

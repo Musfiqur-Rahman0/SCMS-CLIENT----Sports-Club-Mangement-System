@@ -38,7 +38,10 @@ export default function Header() {
       confirmButtonText: "Yes, !",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        logout();
+        const result = await logout();
+        if (result.success) {
+          navigate("/login");
+        }
         Swal.fire(
           "Log out sucesfull",
           "You have loged out sucessfully",

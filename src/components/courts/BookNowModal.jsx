@@ -91,8 +91,6 @@ export default function BookNowModal({ open, onClose, court }) {
       paymentStatus: "unpaid",
     };
 
-    console.log(bookingData);
-
     bookCourt(bookingData);
     // bookingMutation.mutate(bookingData);
   };

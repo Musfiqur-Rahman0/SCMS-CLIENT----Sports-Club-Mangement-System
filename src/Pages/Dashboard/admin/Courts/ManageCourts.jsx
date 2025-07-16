@@ -57,7 +57,6 @@ export default function ManageCourts() {
     return <p>Loading...</p>;
   }
 
-  console.log(editCourt);
   return (
     <div>
       {/* Your table rows */}

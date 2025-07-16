@@ -122,7 +122,6 @@ const ManageBookings = () => {
     );
     setPendingBookings(res.data);
   };
-  console.log(pendingBookings);
 
   const headItems = [
     "#",

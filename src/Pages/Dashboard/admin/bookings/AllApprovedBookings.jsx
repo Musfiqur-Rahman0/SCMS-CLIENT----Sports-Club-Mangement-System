@@ -10,8 +10,6 @@ export default function AllApprovedBookings() {
   const { read } = useCurd("/bookings?status=approved", ["admin", "member"]);
   const { data: approvedBookings = [], isPending, isError } = read;
 
-  console.log(approvedBookings);
-
   if (isPending) return <p>Loading approved bookings...</p>;
   if (isError) return <p>Failed to load approved bookings!</p>;
 
