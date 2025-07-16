@@ -117,7 +117,7 @@ export default function ApprovedBookings() {
   if (isError) return <p>Error loading bookings.</p>;
 
   return (
-    <div className="w-[90%] mx-auto p-8">
+    <div className="w-[95%] mx-auto p-3 md:p-8">
       <h2 className="text-2xl font-bold mb-6">
         Approved Bookings ({bookings.length})
       </h2>

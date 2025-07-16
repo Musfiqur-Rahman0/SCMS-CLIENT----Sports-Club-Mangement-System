@@ -72,7 +72,7 @@ export default function Announcements() {
   if (isError) return <p>Error loading announcements!</p>;
 
   return (
-    <section className="w-[80%]  mx-auto p-6">
+    <section className="w-[95%]  mx-auto p-3 md:p-6">
       <h2 className="text-2xl font-bold mb-6">📢 Announcements</h2>
 
       {announcements.length === 0 && (
