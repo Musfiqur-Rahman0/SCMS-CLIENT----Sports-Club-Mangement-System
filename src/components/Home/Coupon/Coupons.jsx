@@ -15,7 +15,7 @@ export default function Coupons() {
   } = useQuery({
     queryKey: ["coupons"],
     queryFn: async () => {
-      const res = await axiosInstence.get("/coupons");
+      const res = await axiosInstence.get(`/coupons?isActive=true`);
       return res.data;
     },
   });
