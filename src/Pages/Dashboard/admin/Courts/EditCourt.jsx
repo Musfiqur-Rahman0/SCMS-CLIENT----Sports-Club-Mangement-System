@@ -126,7 +126,7 @@ export default function EditCourt() {
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
-      className="space-y-6 w-[90%]  mx-auto p-8"
+      className="space-y-6 w-[90%]  mx-auto p-4 md:p-8"
     >
       <h1 className="text-2xl font-bold mb-4">Edit Court</h1>
 
@@ -220,12 +220,6 @@ export default function EditCourt() {
         {errors.price && (
           <p className="text-sm text-red-500 mt-1">{errors.price.message}</p>
         )}
-      </div>
-
-      <div>
-        <Label htmlFor="slotTimes" className="mb-1 block">
-          Slot Times
-        </Label>
       </div>
 
       <div>
