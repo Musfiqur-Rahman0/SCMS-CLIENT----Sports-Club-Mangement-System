@@ -1,3 +1,5 @@
+import MyPendingBookings from "@/Pages/Shared/Bookings/MyPendingBookings";
+
 export default function UserProfile({ user }) {
   return (
     <div>
@@ -16,6 +18,9 @@ export default function UserProfile({ user }) {
             {new Date(user?.metadata?.creationTime).toLocaleDateString()}
           </p>
         </div>
+      </div>
+      <div className="w-full">
+        <MyPendingBookings />
       </div>
     </div>
   );

@@ -1,13 +1,10 @@
-"use client";
-
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
 import useCurd from "@/Hooks/useCurd";
 import { Link } from "react-router";
-import useAxios from "@/Hooks/useAxios";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 export default function Coupons() {
-  const axiosInstence = useAxios();
   const {
     data: coupons = [],
     isPending,
@@ -15,7 +12,7 @@ export default function Coupons() {
   } = useQuery({
     queryKey: ["coupons"],
     queryFn: async () => {
-      const res = await axiosInstence.get(`/coupons?isActive=true`);
+      const res = await axios.get("http://localhost:3000/coupons");
       return res.data;
     },
   });

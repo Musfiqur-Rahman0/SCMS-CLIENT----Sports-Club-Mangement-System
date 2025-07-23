@@ -89,6 +89,7 @@ export default function AddCourts() {
       });
       reset();
       setSlots([]);
+      setDate("");
     }
   };
 

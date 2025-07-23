@@ -41,9 +41,9 @@ export default function BookNowModal({ open, onClose, court }) {
   const [slots, setSlots] = useState(1);
   const [selectedSlotTime, setSelectedSlotTime] = useState("");
   const { user } = useAuth();
-  const { create } = useCurd("/bookings", ["member", "user", "admin"]);
+  const { create } = useCurd("/bookings", ["admin", "member", "user"]);
 
-  const { mutate: bookCourt } = create;
+  const { mutate: bookCourt, isPending, isError } = create;
 
   const pricePerSession = court?.price || 0;
   const totalPrice = slots * pricePerSession;
@@ -56,26 +56,7 @@ export default function BookNowModal({ open, onClose, court }) {
     },
   });
 
-  const bookingMutation = useMutation({
-    mutationFn: async (newBooking) => {
-      const res = await axiosSecure.post("/bookings", newBooking);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["bookings"]);
-      Swal.fire(
-        "Success",
-        "Booking request sent and is pending approval.",
-        "success"
-      );
-      onClose();
-    },
-    onError: () => {
-      Swal.fire("Error", "Something went wrong. Please try again.", "error");
-    },
-  });
-
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const bookingData = {
       courtId: court._id,
       courtName: court.name,
@@ -91,8 +72,7 @@ export default function BookNowModal({ open, onClose, court }) {
       paymentStatus: "unpaid",
     };
 
-    bookCourt(bookingData);
-    // bookingMutation.mutate(bookingData);
+    await bookCourt(bookingData);
   };
 
   return (
@@ -188,11 +168,9 @@ export default function BookNowModal({ open, onClose, court }) {
 
           <Button
             onClick={handleSubmit(onSubmit)}
-            disabled={
-              bookingMutation.isPending || !selectedDate || !selectedSlotTime
-            }
+            disabled={isPending || !selectedDate || !selectedSlotTime}
           >
-            {bookingMutation.isPending ? "Booking..." : "Submit Booking"}
+            {isPending ? "Booking..." : "Submit Booking"}
           </Button>
         </div>
       </DialogContent>

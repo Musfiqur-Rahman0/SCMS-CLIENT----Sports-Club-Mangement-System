@@ -2,9 +2,10 @@ import { Button } from "@/components/ui/button";
 import useAuth from "@/Hooks/useAuth";
 import useAxiosSecure from "@/Hooks/useAxiosSecure";
 import useCurd from "@/Hooks/useCurd";
+import PaginationComp from "@/Pages/Shared/PaginationComp";
 import SearchInput from "@/Pages/Shared/SearchInput";
 import SharedTable from "@/Pages/Shared/SharedTable";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
@@ -12,35 +13,26 @@ const ManageMembers = () => {
   const axiosSecure = useAxiosSecure();
   const [members, setMembers] = useState([]);
   const [query, setQuery] = useState("");
-  const [error, setError] = useState("");
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalMember, setTotalMember] = useState(0);
   const queryClient = useQueryClient();
+  const limit = 10;
 
-  const { read } = useCurd("/users?role=member", ["admin"]);
+  const { read } = useCurd(
+    `/users?role=member&page=${currentPage}&limit=${limit}`,
+    ["admin"]
+  );
   const { data, isPending, isError } = read;
+  const { updateWithPatch } = useCurd("/users", ["admin"]);
 
-  const mutation = useMutation({
-    mutationFn: async ({ role, id, email }) => {
-      const res = await axiosSecure.patch(`/users/${id}`, { role, email });
-      return res.data;
-    },
-    onSuccess: () => {
-      // ✅ Refetch bookings to reflect changes
-      queryClient.invalidateQueries(["members"]);
-
-      // ✅ Or show a toast or SweetAlert
-      Swal.fire({
-        icon: "success",
-        title: "Members Updated!",
-        text: "The booking status has been updated successfully.",
-      });
-    },
-  });
+  const { mutate: deleteMember } = updateWithPatch;
 
   const handleSearch = async (e) => {
     e.preventDefault();
 
     const res = await axiosSecure.get(`/users?name=${query}&role=member`);
-    setMembers(res.data);
+    setMembers(res.data.users);
   };
 
   // ✅ Your delete handler with Swal
@@ -55,26 +47,7 @@ const ManageMembers = () => {
       confirmButtonText: "Yes, remove it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        mutation.mutate(
-          { role: "user", id, email },
-          {
-            onSuccess: () => {
-              Swal.fire(
-                "Removed!",
-                "The member has been removed successfully.",
-                "success"
-              );
-            },
-            onError: (error) => {
-              console.error(error);
-              Swal.fire(
-                "Error",
-                "Something went wrong while removing the member.",
-                "error"
-              );
-            },
-          }
-        );
+        deleteMember({ id, updatedItems: { role: "user", email } });
       }
     });
   };
@@ -96,9 +69,11 @@ const ManageMembers = () => {
 
   useEffect(() => {
     if (data) {
-      setMembers(data);
+      setMembers(data.users);
+      setTotalPages(data.totalPages);
+      setTotalMember(data.totalUsers);
     }
-  }, [data]);
+  }, [data, currentPage]);
 
   if (isPending) {
     return <p>loading...</p>;
@@ -120,6 +95,16 @@ const ManageMembers = () => {
 
       {!isPending && !isError && (
         <SharedTable headItems={headItems} bodyItems={bodyItems} />
+      )}
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center">
+          <PaginationComp
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPages={totalPages}
+          />
+        </div>
       )}
     </div>
   );

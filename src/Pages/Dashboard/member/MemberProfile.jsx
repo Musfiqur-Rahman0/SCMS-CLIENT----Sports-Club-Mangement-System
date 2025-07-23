@@ -1,5 +1,6 @@
 import useAxiosSecure from "@/Hooks/useAxiosSecure";
 import useCurd from "@/Hooks/useCurd";
+import MyPendingBookings from "@/Pages/Shared/Bookings/MyPendingBookings";
 import { useQuery } from "@tanstack/react-query";
 
 export default function MemberProfile({ user }) {
@@ -29,6 +30,10 @@ export default function MemberProfile({ user }) {
             Member since: {new Date(currentuser.member_on).toLocaleDateString()}
           </p>
         </div>
+      </div>
+
+      <div className="w-full">
+        <MyPendingBookings />
       </div>
     </div>
   );

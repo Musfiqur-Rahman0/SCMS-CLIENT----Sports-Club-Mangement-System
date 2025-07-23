@@ -1,17 +1,20 @@
-"use client";
-
-import { useQuery } from "@tanstack/react-query";
-import useAxios from "@/Hooks/useAxios";
 import SharedTable from "@/Pages/Shared/SharedTable";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useCurd from "@/Hooks/useCurd";
+import PaginationComp from "@/Pages/Shared/PaginationComp";
 
 export default function AllApprovedBookings() {
-  const { read } = useCurd("/bookings?status=approved", ["admin", "member"]);
-  const { data: approvedBookings = [], isPending, isError } = read;
+  const [approvedBookings, setApprovedBookings] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalApprovedBookings, setTotalApprovedBookings] = useState(0);
+  const limit = 10;
 
-  if (isPending) return <p>Loading approved bookings...</p>;
-  if (isError) return <p>Failed to load approved bookings!</p>;
+  const { read } = useCurd(
+    `/bookings?status=approved&page=${currentPage}&limit=${limit}`,
+    ["admin", "member"]
+  );
+  const { data, isPending, isError } = read;
 
   const headItems = [
     "#",
@@ -35,12 +38,35 @@ export default function AllApprovedBookings() {
     ],
   }));
 
+  useEffect(() => {
+    if (data) {
+      setApprovedBookings(data.data);
+      setTotalPages(data.totalPages);
+      setTotalApprovedBookings(data.totalBookings);
+    }
+  }, [data, currentPage]);
+
+  if (isPending) return <p>Loading approved bookings...</p>;
+  if (isError) return <p>Failed to load approved bookings!</p>;
+
   return (
     <div className="p-6">
-      <h2 className="text-xl font-bold mb-4">
-        Approved Bookings ({approvedBookings.length})
-      </h2>
+      {totalApprovedBookings && (
+        <h2 className="text-xl font-bold mb-4">
+          Approved Bookings ({totalApprovedBookings})
+        </h2>
+      )}
       <SharedTable headItems={headItems} bodyItems={bodyItems} />
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center mt-5">
+          <PaginationComp
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPages={totalPages}
+          />
+        </div>
+      )}
     </div>
   );
 }

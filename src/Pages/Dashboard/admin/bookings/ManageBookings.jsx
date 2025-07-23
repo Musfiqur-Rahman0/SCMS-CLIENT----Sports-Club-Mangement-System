@@ -1,11 +1,13 @@
 import { Button } from "@/components/ui/button";
-import useAxios from "@/Hooks/useAxios";
+
 import useAxiosSecure from "@/Hooks/useAxiosSecure";
 import useCurd from "@/Hooks/useCurd";
+import useUserRole from "@/Hooks/useUserRole";
+import PaginationComp from "@/Pages/Shared/PaginationComp";
 import SearchInput from "@/Pages/Shared/SearchInput";
 import SharedTable from "@/Pages/Shared/SharedTable";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { BookType } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
@@ -14,11 +16,21 @@ const ManageBookings = () => {
   const queryClient = useQueryClient();
   const [searchTitle, setSearchTitle] = useState("");
   const [pendingBookings, setPendingBookings] = useState([]);
-  const { read } = useCurd("/bookings?status=pending", [
-    "user",
-    "admin",
-    "member",
-  ]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalBookings, setTotalBookings] = useState(0);
+
+  const limit = 10;
+
+  const { role, roleLoading } = useUserRole();
+
+  const { read } = useCurd(
+    `/bookings?status=pending&page=${currentPage}&limit=${limit}`,
+    ["user", "admin", "member"]
+  );
+  const { updateWithPatch } = useCurd("/bookings", ["user", "member", "admin"]);
+
+  const { mutate: updateBookings } = updateWithPatch;
 
   const { data, isPending, isError } = read;
 
@@ -30,6 +42,7 @@ const ManageBookings = () => {
       });
       return res.data;
     },
+
     onSuccess: () => {
       // ✅ Refetch bookings to reflect changes
       queryClient.invalidateQueries(["approved-bookings"]);
@@ -89,10 +102,19 @@ const ManageBookings = () => {
       cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
-        approveMutation.mutate({
-          bookingId: booking._id,
-          status: "approved",
-          booked_by: booking.userEmail,
+        // approveMutation.mutate({
+        //   bookingId: booking._id,
+        //   status: "approved",
+        //   booked_by: booking.userEmail,
+        // });
+
+        // TODO I HAVE TO CHECK THIS OUT IS THIS WORKING OR NOT ...
+        updateBookings({
+          id: booking._id,
+          updatedItems: {
+            status: "approved",
+            booked_by: booking.userEmail,
+          },
         });
       }
     });
@@ -120,7 +142,7 @@ const ManageBookings = () => {
     const res = await axiosSecure.get(
       `/bookings?title=${searchTitle}&status=pending`
     );
-    setPendingBookings(res.data);
+    setPendingBookings(res.data.data);
   };
 
   const headItems = [
@@ -134,7 +156,7 @@ const ManageBookings = () => {
     "Actions",
   ];
 
-  const bodyItems = pendingBookings.map((booking, index) => ({
+  const bodyItems = pendingBookings?.map((booking, index) => ({
     cells: [
       index + 1,
       booking.courtName || "N/A",
@@ -165,9 +187,11 @@ const ManageBookings = () => {
 
   useEffect(() => {
     if (data) {
-      setPendingBookings(data);
+      setPendingBookings(data.data);
+      setTotalPages(data.totalPages);
+      setTotalBookings(data.totalBookings);
     }
-  }, [data]);
+  }, [data, currentPage]);
 
   if (isPending) {
     return <p>loading...</p>;
@@ -175,9 +199,11 @@ const ManageBookings = () => {
 
   return (
     <div className="p-6 space-y-5">
-      <h2 className="text-xl font-bold mb-4">
-        Pending Bookings ({pendingBookings.length})
-      </h2>
+      {totalBookings && (
+        <h2 className="text-xl font-bold mb-4">
+          Pending Bookings ({totalBookings})
+        </h2>
+      )}
       <SearchInput
         query={searchTitle}
         setQuery={setSearchTitle}
@@ -185,6 +211,16 @@ const ManageBookings = () => {
       />
 
       <SharedTable headItems={headItems} bodyItems={bodyItems} />
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center">
+          <PaginationComp
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPages={totalPages}
+          />
+        </div>
+      )}
     </div>
   );
 };

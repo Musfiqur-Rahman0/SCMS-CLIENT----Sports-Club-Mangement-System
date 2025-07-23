@@ -1,29 +1,32 @@
 import useAuth from "@/Hooks/useAuth";
 import useAxios from "@/Hooks/useAxios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SharedTable from "../SharedTable";
 import { Button } from "@/components/ui/button";
 import Swal from "sweetalert2";
 import useAxiosSecure from "@/Hooks/useAxiosSecure";
 import axios from "axios";
+import { data } from "react-router";
+import PaginationComp from "../PaginationComp";
 
 const MyPendingBookings = () => {
   const { user } = useAuth();
+  const [myPendingBookings, setMyPendingBookings] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalPendingBookings, setTotalPendingBookings] = useState([]);
+  const limit = 10;
   const axiosSecure = useAxiosSecure();
   const { email } = user;
 
   const queryClient = useQueryClient();
 
-  const {
-    data: myPendingBookings = [],
-    isPending,
-    isError,
-  } = useQuery({
-    queryKey: ["mypending-bookings", email],
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["mypending-bookings", email, currentPage],
     queryFn: async () => {
       const res = await axiosSecure.get(
-        `/bookings?email=${email}&status=pending`
+        `/bookings?email=${email}&status=pending&page=${currentPage}&limit=${limit}`
       );
       return res.data;
     },
@@ -101,6 +104,14 @@ const MyPendingBookings = () => {
     ],
   }));
 
+  useEffect(() => {
+    if (data) {
+      setMyPendingBookings(data.data);
+      setTotalPages(data.totalPages);
+      setTotalPendingBookings(data.totalBookings);
+    }
+  }, [data, currentPage]);
+
   if (isPending) {
     return <p>Loading...</p>;
   }
@@ -108,9 +119,19 @@ const MyPendingBookings = () => {
   return (
     <div className="p-6">
       <h2 className="text-xl font-bold mb-4">
-        Pending Bookings ({myPendingBookings.length})
+        Pending Bookings ({totalPendingBookings})
       </h2>
       <SharedTable headItems={headItems} bodyItems={bodyItems} />
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center mt-3">
+          <PaginationComp
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPages={totalPages}
+          />
+        </div>
+      )}
     </div>
   );
 };

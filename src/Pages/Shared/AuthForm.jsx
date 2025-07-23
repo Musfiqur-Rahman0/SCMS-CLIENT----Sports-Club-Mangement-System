@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router";
 import useAuth from "@/Hooks/useAuth";
 import useAxios from "@/Hooks/useAxios";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 function AuthFormBase({ fields, onSubmit, submitText, linkText, linkHref }) {
   const {
@@ -39,6 +40,7 @@ function AuthFormBase({ fields, onSubmit, submitText, linkText, linkHref }) {
       await axiosInstance.post("/users", newUser);
     } catch (error) {
       console.log(error);
+      Swal.fire("Error", "Failed to login", "error");
     }
   };
 

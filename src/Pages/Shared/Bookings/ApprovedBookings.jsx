@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useAxiosSecure from "@/Hooks/useAxiosSecure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import SharedTable from "@/Pages/Shared/SharedTable";
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 import useCurd from "@/Hooks/useCurd";
+import PaginationComp from "../PaginationComp";
 
 export default function ApprovedBookings() {
   const axiosSecure = useAxiosSecure();
@@ -17,39 +18,38 @@ export default function ApprovedBookings() {
   const { email } = user;
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  // const { read } = useCurd("");
-  // // Fetch only approved bookings
-  // const {} = read
+  const [approvedBookings, setApprovedBookings] = useState([]);
+  const [totalApprovedBookings, setTotalApprovedBookings] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const {
-    data: bookings = [],
-    isPending,
-    isError,
-  } = useQuery({
-    queryKey: ["approved-bookings"],
+  const limit = 10;
+
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["approved-Bookings", email, currentPage],
     enabled: !!email,
     queryFn: async () => {
       const res = await axiosSecure.get(
-        `/bookings?status=approved&email=${email}`
+        `/bookings?status=approved&email=${email}&page=${currentPage}&limit=${limit}`
       );
       return res.data;
     },
   });
 
   const mutation = useMutation({
-    mutationFn: async (bookingID) => {
-      const res = await axiosSecure.delete(`/bookings/${bookingID}`);
+    mutationFn: async (approvedBookingsID) => {
+      const res = await axiosSecure.delete(`/bookings/${approvedBookingsID}`);
       return res.data;
     },
     onSuccess: () => {
-      // ✅ Refetch bookings to reflect changes
-      queryClient.invalidateQueries(["mypending-bookings"]);
+      // ✅ Refetch approvedBookingss to reflect changes
+      queryClient.invalidateQueries(["mypending-approvedBookingss"]);
 
       // ✅ Or show a toast or SweetAlert
       Swal.fire({
         icon: "success",
-        title: "Booking Canceled!",
-        text: "The booking status has been updated successfully.",
+        title: " Bookings Canceled!",
+        text: "The  Bookings status has been updated successfully.",
       });
     },
     onError: (error) => {
@@ -62,10 +62,10 @@ export default function ApprovedBookings() {
     },
   });
 
-  const handleCencelBooking = (bookingID) => {
+  const handleCencelapprovedBookings = (approvedBookingsID) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "Do you really want to remove this booking? This action cannot be undone.",
+      text: "Do you really want to remove this Bookings? This action cannot be undone.",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -73,11 +73,13 @@ export default function ApprovedBookings() {
       confirmButtonText: "Yes, remove it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        mutation.mutate(bookingID);
-        Swal.fire("Deleted", "Sucessfully deleted booking", "success");
+        mutation.mutate(approvedBookingsID);
+        Swal.fire("Deleted", "Sucessfully deleted Bookings", "success");
       }
     });
   };
+
+  console.log(data);
 
   const headItems = [
     "#",
@@ -90,22 +92,28 @@ export default function ApprovedBookings() {
     "Actions",
   ];
 
-  const bodyItems = bookings.map((booking, index) => ({
+  const bodyItems = approvedBookings.map((approvedBookings, index) => ({
     cells: [
       index + 1,
-      booking.userName || "N/A",
-      booking.courtName || "N/A",
-      booking.date ? new Date(booking.date).toLocaleDateString() : "N/A",
-      Array.isArray(booking.slots) ? booking.slots.join(", ") : booking.slots,
-      `$${booking.totalPrice || 0}`,
-      booking.status || "Approved",
+      approvedBookings.userName || "N/A",
+      approvedBookings.courtName || "N/A",
+      approvedBookings.date
+        ? new Date(approvedBookings.date).toLocaleDateString()
+        : "N/A",
+      Array.isArray(approvedBookings.slots)
+        ? approvedBookings.slots.join(", ")
+        : approvedBookings.slots,
+      `$${approvedBookings.totalPrice || 0}`,
+      approvedBookings.status || "Approved",
       <div className="flex items-center gap-3">
-        <Button onClick={() => navigate(`/dashboard/payment/${booking._id}`)}>
+        <Button
+          onClick={() => navigate(`/dashboard/payment/${approvedBookings._id}`)}
+        >
           Pay
         </Button>
         <Button
           variant={"outline"}
-          onClick={() => handleCencelBooking(booking._id)}
+          onClick={() => handleCencelapprovedBookings(approvedBookings._id)}
         >
           Cancel
         </Button>
@@ -113,16 +121,36 @@ export default function ApprovedBookings() {
     ],
   }));
 
-  if (isPending) return <p>Loading approved bookings...</p>;
-  if (isError) return <p>Error loading bookings.</p>;
+  useEffect(() => {
+    if (data) {
+      setApprovedBookings(data.data);
+      setTotalPages(data.totalPages);
+      setTotalApprovedBookings(data.totalBookings);
+    }
+  }, [data, currentPage]);
+
+  if (isPending) return <p>Loading approved Bookingss...</p>;
+  if (isError) return <p>Error loading approved Bookingss.</p>;
 
   return (
     <div className="w-[95%] mx-auto p-3 md:p-8">
-      <h2 className="text-2xl font-bold mb-6">
-        Approved Bookings ({bookings.length})
-      </h2>
+      {totalApprovedBookings > 0 && (
+        <h2 className="text-2xl font-bold mb-6">
+          Approved Bookings ({totalApprovedBookings})
+        </h2>
+      )}
 
       <SharedTable headItems={headItems} bodyItems={bodyItems} />
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center mt-5">
+          <PaginationComp
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPages={totalPages}
+          />
+        </div>
+      )}
     </div>
   );
 }

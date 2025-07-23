@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import useAxiosSecure from "@/Hooks/useAxiosSecure";
-import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -8,10 +6,7 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router";
 import useUserRole from "@/Hooks/useUserRole";
 import useCurd from "@/Hooks/useCurd";
 import {
@@ -23,8 +18,8 @@ import {
 import AnnouncementForm from "./AnnouncementForm";
 
 export default function Announcements() {
-  const axiosSecure = useAxiosSecure();
-  const navigate = useNavigate();
+  // const axiosSecure = useAxiosSecure();
+  // const navigate = useNavigate();
   const { role } = useUserRole();
   const { read, deleteMutation, updateWithPut } = useCurd("/announcements", [
     "admin",

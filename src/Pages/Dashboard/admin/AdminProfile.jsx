@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useCurd from "@/Hooks/useCurd";
+import ManageBookings from "./bookings/ManageBookings";
 
 export default function AdminProfile({ user }) {
   const { read } = useCurd("/admin-stats", ["admin"]);
@@ -70,6 +71,10 @@ export default function AdminProfile({ user }) {
             </Card>
           </>
         )}
+      </div>
+
+      <div className="w-full hidden md:block">
+        <ManageBookings />
       </div>
     </div>
   );

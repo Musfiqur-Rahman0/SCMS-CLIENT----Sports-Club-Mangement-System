@@ -1,12 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import useAxiosSecure from "@/Hooks/useAxiosSecure";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import SharedTable from "@/Pages/Shared/SharedTable";
 import { Button } from "@/components/ui/button";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router";
 import useCurd from "@/Hooks/useCurd";
 import {
   Dialog,
@@ -34,21 +31,26 @@ import { Calendar } from "@/components/ui/calendar";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { format } from "date-fns";
+import PaginationComp from "@/Pages/Shared/PaginationComp";
+import { data } from "react-router";
 
 export default function ManageCoupons() {
-  const axiosSecure = useAxiosSecure();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const [selectedCoupon, setSelectedCoupon] = useState(null);
+  const [coupons, setCoupons] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCoupon, setTotalCoupon] = useState(0);
+  const limit = 10;
 
-  const { read, updateWithPut, deleteMutation } = useCurd("/coupons", [
+  const { updateWithPut, deleteMutation } = useCurd(`/coupons`, ["admin"]);
+  const { read } = useCurd(`/coupons?page=${currentPage}&limit=${limit}`, [
     "admin",
   ]);
 
-  const { data: coupons = [], isPending, isError } = read;
+  const { data, isPending, isError } = read;
   const { mutate } = updateWithPut;
 
   const handleDelete = (coupon) => {
@@ -123,6 +125,7 @@ export default function ManageCoupons() {
     },
   });
 
+  // giving default data to the seleted coupon form
   useEffect(() => {
     if (selectedCoupon) {
       reset({
@@ -141,6 +144,15 @@ export default function ManageCoupons() {
     }
   }, [selectedCoupon, reset]);
 
+  useEffect(() => {
+    if (data) {
+      setCoupons(data.coupons);
+      setTotalPages(data.totalPages);
+      setTotalCoupon(data.totalCoupon);
+    }
+  }, [data, currentPage]);
+
+  // updating the form with changes
   const onSubmit = async (data) => {
     const id = selectedCoupon?._id;
     if (!id) {
@@ -159,10 +171,20 @@ export default function ManageCoupons() {
   return (
     <div className="p-8 w-[90%] mx-auto">
       <h2 className="text-2xl font-bold mb-6">
-        Manage Coupons ({coupons.length})
+        Manage Coupons ({totalCoupon})
       </h2>
 
       <SharedTable headItems={headItems} bodyItems={bodyItems} />
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center mt-5">
+          <PaginationComp
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPages={totalPages}
+          />
+        </div>
+      )}
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="max-w-xl">

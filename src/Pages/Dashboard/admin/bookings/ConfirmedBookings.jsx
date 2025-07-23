@@ -1,24 +1,21 @@
-import useAxiosSecure from "@/Hooks/useAxiosSecure";
 import useCurd from "@/Hooks/useCurd";
+import PaginationComp from "@/Pages/Shared/PaginationComp";
 import SharedTable from "@/Pages/Shared/SharedTable";
-import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const AllConfirmedBookings = () => {
-  const { read } = useCurd();
-  const axiosSecure = useAxiosSecure();
+  const [confirmedBookings, setConfirmedBookings] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalConfirmedBookings, setTotalConfirmedBookings] = useState(0);
+  const limit = 10;
 
-  const {
-    data: confirmedBookings = [],
-    isPending,
-    isError,
-  } = useQuery({
-    queryKey: ["all confirmed bookings"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/bookings?status=confirmed");
-      return res.data;
-    },
-  });
+  const { read } = useCurd(
+    `/bookings?status=confirmed&page=${currentPage}&limit=${limit}`,
+    ["admin"]
+  );
+
+  const { data, isPending, isError } = read;
 
   const headItems = [
     "#",
@@ -42,6 +39,14 @@ const AllConfirmedBookings = () => {
     ],
   }));
 
+  useEffect(() => {
+    if (data) {
+      setConfirmedBookings(data.data);
+      setTotalPages(data.totalPages);
+      setTotalConfirmedBookings(data.totalBookings);
+    }
+  }, [data, currentPage]);
+
   if (isPending) {
     return <p>Loading...</p>;
   }
@@ -49,9 +54,19 @@ const AllConfirmedBookings = () => {
   return (
     <div className="p-6">
       <h2 className="text-xl font-bold mb-4">
-        Confimed Bookings ({confirmedBookings.length})
+        Confimed Bookings ({totalConfirmedBookings})
       </h2>
       <SharedTable headItems={headItems} bodyItems={bodyItems} />
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center mt-5">
+          <PaginationComp
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPages={totalPages}
+          />
+        </div>
+      )}
     </div>
   );
 };

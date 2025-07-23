@@ -1,43 +1,31 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
-
-import { useState } from "react";
-import useAxiosSecure from "@/Hooks/useAxiosSecure";
 import SharedTable from "@/Pages/Shared/SharedTable";
 import { Button } from "@/components/ui/button";
 
 import { useNavigate } from "react-router";
 import useCurd from "@/Hooks/useCurd";
+import { useEffect, useState } from "react";
+import { dataTagErrorSymbol } from "@tanstack/react-query";
+import PaginationComp from "@/Pages/Shared/PaginationComp";
 
 export default function ManageCourts() {
-  const queryClient = useQueryClient();
-  const axiosSecure = useAxiosSecure();
-  const [editCourt, setEditCourt] = useState(null);
   const navigate = useNavigate();
 
-  const { read } = useCurd("/courts", ["member", "admin", "user"]);
+  const { deleteMutation } = useCurd("/courts", ["admin"]);
+  const [courts, setCourts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCourts, setTotalCourts] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 10;
+  const { read } = useCurd(`/courts?page=${currentPage}&limit=${limit}`, [
+    "member",
+    "admin",
+    "user",
+  ]);
 
-  const { data: courts = [], isPending, isError } = read;
+  const { data, isPending, isError } = read;
 
-  // const {
-  //   data: courts,
-  //   isPending,
-  //   isError,
-  // } = useQuery({
-  //   queryKey: ["courts"],
-  //   queryFn: async () => {
-  //     const res = await axiosSecure.get("/courts");
-  //     return res.data;
-  //   },
-  // });
-
-  const deleteMutation = useMutation({
-    mutationFn: async (id) => axiosSecure.delete(`/courts/${id}`),
-    onSuccess: () => {
-      Swal.fire("Deleted!", "Court deleted successfully!", "success");
-      queryClient.invalidateQueries(["courts"]);
-    },
-  });
+  const { mutate: deleteCourt } = deleteMutation;
 
   const handleDelete = (court) => {
     Swal.fire({
@@ -48,17 +36,30 @@ export default function ManageCourts() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteMutation.mutate(court._id);
+        deleteCourt(court._id);
       }
     });
   };
+
+  useEffect(() => {
+    if (data) {
+      setCourts(data.courts);
+      setTotalPages(data.totalPages);
+      setTotalCourts(data.totalCourts);
+    }
+  }, [data, currentPage]);
 
   if (isPending) {
     return <p>Loading...</p>;
   }
 
   return (
-    <div>
+    <div className="space-y-4">
+      {totalCourts && (
+        <h2 className="text-xl font-semibold">
+          Manage all courts {totalCourts}
+        </h2>
+      )}
       {/* Your table rows */}
       <SharedTable
         headItems={["#", "Name", "Type", "Capacity", "Price/hr", "Actions"]}
@@ -82,6 +83,16 @@ export default function ManageCourts() {
           ],
         }))}
       />
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center mt-3">
+          <PaginationComp
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPages={totalPages}
+          />
+        </div>
+      )}
     </div>
   );
 }

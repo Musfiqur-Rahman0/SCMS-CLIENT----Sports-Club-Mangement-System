@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -21,7 +21,6 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
 import useAxiosSecure from "@/Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
@@ -31,11 +30,13 @@ import axios from "axios";
 export default function EditCourt() {
   const [deadline, setDeadline] = useState(null);
   const axiosSecure = useAxiosSecure();
+  const [slotInput, setSlotInput] = useState("");
   const { id } = useParams();
   const navigate = useNavigate();
 
   const { read } = useCurd(`/courts/${id}`, ["admin"]);
   const { data: selectedCourt, isPending, isError } = read;
+  const [slots, setSlots] = useState([]);
 
   const {
     register,
@@ -43,6 +44,7 @@ export default function EditCourt() {
     setValue,
     reset,
     watch,
+    control,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -50,7 +52,7 @@ export default function EditCourt() {
       capacity: 1,
       location: "",
       price: 0,
-      type: "",
+      type: selectedCourt?.type || "",
       description: "",
       rules: "",
       more: "",
@@ -58,6 +60,19 @@ export default function EditCourt() {
       deadline: null,
     },
   });
+
+  const handleAddSlot = () => {
+    if (slotInput.trim()) {
+      setSlots([...slots, slotInput.trim()]);
+      setSlotInput("");
+    }
+  };
+
+  const handleRemoveSlot = (index) => {
+    const newSlots = [...slots];
+    newSlots.splice(index, 1);
+    setSlots(newSlots);
+  };
 
   useEffect(() => {
     if (selectedCourt) {
@@ -78,6 +93,7 @@ export default function EditCourt() {
       setDeadline(
         selectedCourt.deadline ? new Date(selectedCourt.deadline) : null
       );
+      setSlots(selectedCourt.slotTimes);
     }
   }, [selectedCourt, reset]);
 
@@ -86,6 +102,7 @@ export default function EditCourt() {
 
     const formData = new FormData();
     formData.append("image", file);
+    data.slotTimes = slots; // pass slots as array
 
     try {
       const result = await axios.post(
@@ -143,17 +160,13 @@ export default function EditCourt() {
         )}
       </div>
 
-      <div className="flex gap-4">
-        <div className="flex-1">
-          <Label htmlFor="type" className="mb-1 block">
-            Court Type
-          </Label>
-          <Select
-            value={watch("type")}
-            onValueChange={(val) =>
-              setValue("type", val, { shouldValidate: true })
-            }
-          >
+      <Controller
+        name="type"
+        key={selectedCourt?.id || "select-type"}
+        control={control}
+        rules={{ required: "Court type is required" }}
+        render={({ field }) => (
+          <Select value={field.value} onValueChange={field.onChange}>
             <SelectTrigger>
               <SelectValue placeholder="Select a type" />
             </SelectTrigger>
@@ -165,31 +178,12 @@ export default function EditCourt() {
               <SelectItem value="Squash">Squash</SelectItem>
             </SelectContent>
           </Select>
-          {errors.type && (
-            <p className="text-sm text-red-500 mt-1">Court type is required</p>
-          )}
-        </div>
+        )}
+      />
 
-        <div className="flex-1">
-          <Label htmlFor="capacity" className="mb-1 block">
-            Capacity
-          </Label>
-          <Input
-            type="number"
-            {...register("capacity", {
-              required: "Capacity is required",
-              valueAsNumber: true,
-              min: { value: 1, message: "Capacity must be at least 1" },
-            })}
-            min={1}
-          />
-          {errors.capacity && (
-            <p className="text-sm text-red-500 mt-1">
-              {errors.capacity.message}
-            </p>
-          )}
-        </div>
-      </div>
+      {errors.type && (
+        <p className="text-sm text-red-500 ">{errors.type.message}</p>
+      )}
 
       <div>
         <Label htmlFor="location" className="mb-1 block">
@@ -220,6 +214,39 @@ export default function EditCourt() {
         {errors.price && (
           <p className="text-sm text-red-500 mt-1">{errors.price.message}</p>
         )}
+      </div>
+
+      <div>
+        <Label htmlFor="slotTimes" className="mb-1 block">
+          Slot Times
+        </Label>
+        <div className="flex gap-2 mb-2">
+          <Input
+            value={slotInput}
+            onChange={(e) => setSlotInput(e.target.value)}
+            placeholder="E.g., 07:00AM-08:00AM"
+          />
+          <Button type="button" onClick={handleAddSlot}>
+            Add Slot
+          </Button>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {slots.map((slot, idx) => (
+            <span
+              key={idx}
+              className="inline-flex items-center px-3 py-1 bg-gray-200 rounded-full text-sm"
+            >
+              {slot}
+              <button
+                type="button"
+                onClick={() => handleRemoveSlot(idx)}
+                className="ml-2 text-red-500"
+              >
+                &times;
+              </button>
+            </span>
+          ))}
+        </div>
       </div>
 
       <div>
@@ -298,7 +325,12 @@ export default function EditCourt() {
         <Input
           id={"image"}
           type={"file"}
-          {...register("image", { required: true })}
+          {...register("image", {
+            required: {
+              value: true,
+              message: "Please upload  aimage to update ",
+            },
+          })}
         />
         {errors.image && (
           <p className="text-sm text-red-500 mt-1">{errors.image.message}</p>

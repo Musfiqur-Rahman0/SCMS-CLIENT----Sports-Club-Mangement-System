@@ -15,7 +15,6 @@ const MakePayments = () => {
   const { read } = useCurd(`/bookings/${id}`, ["admin", "member"]);
   const { data: selectedBookings = {}, isPending, isError } = read;
 
-  console.log(selectedBookings);
   if (isPending) {
     return <p>Loading...</p>;
   }
