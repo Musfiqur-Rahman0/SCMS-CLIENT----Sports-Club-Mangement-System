@@ -4,7 +4,7 @@ import { AuthForm } from "@/Pages/Shared/AuthForm";
 import Lottie from "lottie-react";
 import React from "react";
 import { useLocation, useNavigate } from "react-router";
-import loginAni from "../../../../src/assets/Animations/User Profile.json";
+// import loginAni from "../../../../src/assets/Animations/User Profile.json";
 
 const Login = () => {
   const { loginWithGoogle, login } = useAuth();
@@ -40,13 +40,13 @@ const Login = () => {
         />
       </div>
       <div className="hidden lg:block">
-        <Lottie
+        {/* <Lottie
           animationData={loginAni}
           style={{
             height: 500,
             width: 500,
           }}
-        />
+        /> */}
       </div>
     </div>
   );

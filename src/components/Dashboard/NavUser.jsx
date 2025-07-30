@@ -39,7 +39,7 @@ export function NavUser({ user }) {
       text: "You will log out from this app",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, !",
+      confirmButtonText: "Yes!",
     }).then(async (result) => {
       if (result.isConfirmed) {
         logout();
