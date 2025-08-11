@@ -90,6 +90,8 @@ export default function EditCourt() {
           ? new Date(selectedCourt.deadline)
           : null,
       });
+
+      setValue("type", selectedCourt.type);
       setDeadline(
         selectedCourt.deadline ? new Date(selectedCourt.deadline) : null
       );

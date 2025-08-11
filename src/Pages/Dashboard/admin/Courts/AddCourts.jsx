@@ -98,7 +98,6 @@ export default function AddCourts() {
       <h1 className="text-3xl font-bold mb-8">Add New Court</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Your existing fields */}
         <div>
           <Label htmlFor="name" className="mb-1 block">
             Court Name
