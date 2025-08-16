@@ -10,6 +10,7 @@ import CourtCard from "../Shared/CourtCard";
 import UpcomingCourts from "@/components/Home/upcoming-matches/UpcomingCourts";
 import MembershipPlans from "@/components/MemberShipOverview/MembershipPlans";
 import WhatDefineUs from "@/components/Defenation/WhatDefineUs";
+import TrainersSection from "@/components/Trainers/TrainerSection";
 
 const Home = () => {
   const { role, roleLoading } = useUserRole();
@@ -20,7 +21,7 @@ const Home = () => {
       <main className="max-w-7xl mx-auto space-y-16 mt-16">
         <UpcomingCourts />
         <AboutClub />
-
+        <TrainersSection />
         <MembershipPlans />
         <OurLocation />
         <Coupons />
