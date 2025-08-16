@@ -42,8 +42,8 @@ export default function OurLocation() {
 
   return (
     <section className="py-16">
-      <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-4">Find Us On</h2>
+      <div className=" px-4">
+        <h2 className="title mb-4">Find Us On</h2>
 
         <div className="flex flex-col sm:flex-row gap-2 mb-8">
           <Input

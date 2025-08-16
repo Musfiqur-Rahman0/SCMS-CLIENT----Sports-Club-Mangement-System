@@ -124,3 +124,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+.title {
+  font-size: 2rem;
+  font-weight:  bold;
+  padding-left: 10px;
+  border-left: 8px solid #ff3503;
+}
+.subtitle {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #949191;
+}

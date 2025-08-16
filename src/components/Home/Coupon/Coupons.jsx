@@ -17,14 +17,14 @@ export default function Coupons() {
     },
   });
 
-  console.log(coupons);
+  // console.log(coupons);
 
   if (isPending) return <p>Loading coupons data...</p>;
   if (isError) return <p>Failed to load coupons.</p>;
 
   return (
-    <section className="p-6 mb-20 max-w-7xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">🔥 Active Coupons</h2>
+    <section className="p-6 mb-20 ">
+      <h2 className="mb-4  title">🔥 Active Coupons</h2>
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 ">
         {coupons?.map((coupon) => (
           <div
