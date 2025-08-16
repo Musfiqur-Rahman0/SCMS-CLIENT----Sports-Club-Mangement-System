@@ -111,6 +111,19 @@ const Testimonials = () => {
         slidesPerView={3}
         spaceBetween={50}
         navigation={true}
+        breakpoints={{
+          0: {
+            slidesPerView: 1,
+          },
+
+          640: {
+            slidesPerView: 2,
+          },
+
+          1024: {
+            slidesPerView: 3,
+          },
+        }}
         onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex + 1)}
         modules={[Navigation]}
         className="mt-10"

@@ -5,6 +5,8 @@ import axios from "axios";
 import { FaArrowRightLong } from "react-icons/fa6";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
 
 const UpcomingCourts = () => {
   const [upcomingCourts, setUpcomingCourts] = useState([]);
@@ -37,15 +39,33 @@ const UpcomingCourts = () => {
           Stay ahead of the game — mark your calendar and join the action!
         </p>
       </div>
-      <div className="grid grid-cols-3 gap-5">
+      <Swiper
+        slidesPerView={3}
+        spaceBetween={50}
+        navigation={true}
+        breakpoints={{
+          0: {
+            slidesPerView: 1,
+          },
+
+          640: {
+            slidesPerView: 2,
+          },
+
+          1024: {
+            slidesPerView: 3,
+          },
+        }}
+        // onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex + 1)}
+        modules={[Navigation]}
+        className=""
+      >
         {upcomingCourts.map((court) => (
-          <CourtCard
-            key={court._id}
-            court={court}
-            setSelectedCourt={setSelectedCourt}
-          />
+          <SwiperSlide key={court._id}>
+            <CourtCard court={court} setSelectedCourt={setSelectedCourt} />
+          </SwiperSlide>
         ))}
-      </div>
+      </Swiper>
 
       <div className="w-full flex items-center justify-center ">
         {" "}
