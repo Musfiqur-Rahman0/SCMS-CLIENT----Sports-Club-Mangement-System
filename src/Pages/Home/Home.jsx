@@ -11,6 +11,7 @@ import UpcomingCourts from "@/components/Home/upcoming-matches/UpcomingCourts";
 import MembershipPlans from "@/components/MemberShipOverview/MembershipPlans";
 import WhatDefineUs from "@/components/Defenation/WhatDefineUs";
 import TrainersSection from "@/components/Trainers/TrainerSection";
+import Testimonials from "@/components/Testimonials/Testimonials";
 
 const Home = () => {
   const { role, roleLoading } = useUserRole();
@@ -23,6 +24,7 @@ const Home = () => {
         <AboutClub />
         <TrainersSection />
         <MembershipPlans />
+        <Testimonials />
         <OurLocation />
         <Coupons />
       </main>

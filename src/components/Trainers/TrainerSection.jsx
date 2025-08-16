@@ -60,7 +60,7 @@ export default function TrainersSection() {
         {/* Cards */}
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {trainers.map((trainer, index) => (
-            <div class="flex items-center justify-center bg-gray-500 shadow-gray-950 rounded-3xl p-3">
+            <div class="flex items-center justify-center bg-gray-50 shadow-gray-950 rounded-3xl p-3">
               <div class="w-full rounded-3xl shadow-2xl flex flex-col items-center overflow-hidden relative">
                 <img
                   class="w-full object-cover rounded-3xl blur-"
@@ -70,8 +70,8 @@ export default function TrainersSection() {
                 <div class="absolute bottom-0 w-full h-1/3 bg-gradient-to-t from-black/60 to-transparent backdrop-blur-md pointer-events-none"></div>
 
                 <div className="absolute bottom-0 w-full  p-6 z-20">
-                  <div class="text-center mt-4">
-                    <h2 class="text-white text-2xl font-semibold flex items-center justify-center space-x-2">
+                  <div class=" mt-4">
+                    <h2 class="text-white text-2xl font-semibold flex items-center  space-x-2">
                       <span>Sophie Bennett</span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -124,9 +124,6 @@ export default function TrainersSection() {
                         <span>48</span>
                       </div>
                     </div>
-                    <button class="bg-white text-black font-semibold py-2 px-6 rounded-full text-sm">
-                      Follow +
-                    </button>
                   </div>
                 </div>
               </div>
