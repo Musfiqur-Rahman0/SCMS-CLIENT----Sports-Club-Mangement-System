@@ -53,8 +53,11 @@ Built with **React**, **Vite**, **TailwindCSS**, **Firebase Auth**, and **Fireba
 
 ## 🔑 Environment Variables
 
+
 Create a `.env` file with:
 VITE_FIREBASE_API_KEY=YOUR_FIREBASE_API_KEY
 VITE_FIREBASE_AUTH_DOMAIN=YOUR_AUTH_DOMAIN
 VITE_FIREBASE_PROJECT_ID=YOUR_PROJECT_ID
 VITE_IMGBB_API_KEY=YOUR_IMGBB_API_KEY
+
+Live link : https://scms-d0a1d.web.app/
