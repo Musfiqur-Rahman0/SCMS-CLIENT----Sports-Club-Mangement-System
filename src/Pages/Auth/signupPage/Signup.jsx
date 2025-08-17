@@ -47,8 +47,8 @@ const Signup = () => {
   return (
     <div className="w-full flex flex-col gap-8 items-center justify-center ">
       <div className="text-center">
-        <h2 className="text-3xl font-bold">Welcome Aboard!</h2>
-        <p className="text-sm text-gray-500">
+        <h2 className="text-2xl md:text-3xl font-bold">Welcome Aboard!</h2>
+        <p className="text-xs md:text-sm text-gray-500">
           Sign up in seconds and start your journey with us.
         </p>
       </div>

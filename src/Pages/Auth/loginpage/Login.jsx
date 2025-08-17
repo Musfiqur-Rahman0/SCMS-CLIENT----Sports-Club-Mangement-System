@@ -28,8 +28,10 @@ const Login = () => {
   return (
     <div className="w-full flex  flex-col gap-8 items-center justify-center ">
       <div className="text-center">
-        <h2 className="text-3xl font-bold ">Welcome Back Chief</h2>
-        <p className="text-sm text-gray-500">Please login to Continue</p>
+        <h2 className="text-2xl md:text-3xl font-bold ">Welcome Back Chief</h2>
+        <p className="text-xs md:text-sm text-gray-500">
+          Please login to Continue
+        </p>
       </div>
       <div className="p-4 md:p-0 w-full">
         <AuthForm
