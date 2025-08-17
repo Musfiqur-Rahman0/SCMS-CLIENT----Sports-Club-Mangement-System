@@ -7,6 +7,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
+import { CourtCardSkeleton } from "@/components/courts/CourtCardSkeleton";
+import { motion } from "motion/react";
 
 const UpcomingCourts = () => {
   const [upcomingCourts, setUpcomingCourts] = useState([]);
@@ -33,39 +35,58 @@ const UpcomingCourts = () => {
 
   return (
     <section className="space-y-8">
-      <div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
         <h2 className=" title">Upcoming Events & Matches</h2>
         <p className="subtitle mt-1">
           Stay ahead of the game — mark your calendar and join the action!
         </p>
-      </div>
-      <Swiper
-        slidesPerView={3}
-        spaceBetween={50}
-        navigation={true}
-        breakpoints={{
-          0: {
-            slidesPerView: 1,
-          },
+      </motion.div>
 
-          640: {
-            slidesPerView: 2,
-          },
+      {isPending ? (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 ">
+          <CourtCardSkeleton />
+          <CourtCardSkeleton />
+          <CourtCardSkeleton />
+        </div>
+      ) : (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <Swiper
+            slidesPerView={3}
+            spaceBetween={50}
+            navigation={true}
+            breakpoints={{
+              0: {
+                slidesPerView: 1,
+              },
 
-          1024: {
-            slidesPerView: 3,
-          },
-        }}
-        // onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex + 1)}
-        modules={[Navigation]}
-        className=""
-      >
-        {upcomingCourts.map((court) => (
-          <SwiperSlide key={court._id}>
-            <CourtCard court={court} setSelectedCourt={setSelectedCourt} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+              640: {
+                slidesPerView: 2,
+              },
+
+              1024: {
+                slidesPerView: 3,
+              },
+            }}
+            // onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex + 1)}
+            modules={[Navigation]}
+            className=""
+          >
+            {upcomingCourts.map((court) => (
+              <SwiperSlide key={court._id}>
+                <CourtCard court={court} setSelectedCourt={setSelectedCourt} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </motion.div>
+      )}
 
       <div className="w-full flex items-center justify-center ">
         {" "}

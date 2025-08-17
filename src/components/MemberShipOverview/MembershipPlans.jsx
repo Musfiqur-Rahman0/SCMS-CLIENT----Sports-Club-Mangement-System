@@ -55,7 +55,7 @@ export default function MembershipPlans() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          // viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className=" mb-12"
         >
@@ -63,7 +63,12 @@ export default function MembershipPlans() {
           <p className="mt-2 subtitle">Choose the plan that fits your game.</p>
         </motion.div>
 
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {membershipPlans.map((plan, index) => (
             <motion.div
               key={plan.title}
@@ -104,7 +109,7 @@ export default function MembershipPlans() {
               </Card>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

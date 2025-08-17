@@ -14,6 +14,7 @@ import Lottie from "lottie-react";
 import PaginationComp from "../Shared/PaginationComp";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { CourtCardSkeleton } from "@/components/courts/CourtCardSkeleton";
 
 export default function CourtsPage() {
   const axiosInstance = useAxios();
@@ -45,10 +46,6 @@ export default function CourtsPage() {
     }
   }, [currentPage, response]);
 
-  if (isPending) {
-    return <Loader />;
-  }
-
   if (isError) {
     return (
       <p className="text-center text-red-500 mt-8">Error loading courts.</p>
@@ -57,7 +54,13 @@ export default function CourtsPage() {
 
   return (
     <div className="max-w-7xl mx-auto grid grid-cols-1  lg:grid-cols-3 gap-6 p-4">
-      {courts.length !== 0 ? (
+      {isPending ? (
+        <div className="col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, idx) => (
+            <CourtCardSkeleton key={idx} />
+          ))}
+        </div>
+      ) : courts.length !== 0 ? (
         <div className="col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {courts.map((court) => (
             <CourtCard

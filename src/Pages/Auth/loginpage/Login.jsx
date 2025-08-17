@@ -26,8 +26,12 @@ const Login = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 items-center justify-center h-screen">
-      <div className="p-4 md:p-0">
+    <div className="w-full flex  flex-col gap-8 items-center justify-center ">
+      <div className="text-center">
+        <h2 className="text-3xl font-bold ">Welcome Back Chief</h2>
+        <p className="text-sm text-gray-500">Please login to Continue</p>
+      </div>
+      <div className="p-4 md:p-0 w-full">
         <AuthForm
           fields={[
             { name: "email", label: "Email", type: "email" },
@@ -38,15 +42,6 @@ const Login = () => {
           linkText="Don't have an account? Sign up"
           linkHref="/signup"
         />
-      </div>
-      <div className="hidden lg:block">
-        {/* <Lottie
-          animationData={loginAni}
-          style={{
-            height: 500,
-            width: 500,
-          }}
-        /> */}
       </div>
     </div>
   );

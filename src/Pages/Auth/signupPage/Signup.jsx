@@ -45,15 +45,12 @@ const Signup = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 items-center justify-center h-screen">
-      <div className="hidden md:flex items-center justify-center">
-        <Lottie
-          animationData={signupAni}
-          style={{
-            height: 500,
-            width: 500,
-          }}
-        />
+    <div className="w-full flex flex-col gap-8 items-center justify-center ">
+      <div className="text-center">
+        <h2 className="text-3xl font-bold">Welcome Aboard!</h2>
+        <p className="text-sm text-gray-500">
+          Sign up in seconds and start your journey with us.
+        </p>
       </div>
       <div className="p-4 md:p-0">
         <AuthForm

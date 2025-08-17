@@ -52,7 +52,6 @@ export default function WhatDefineUs() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               whileHover={{ scale: 1.02 }}
-              viewport={{ once: true }}
               transition={{ duration: 0.4, delay: index * 0.1 }}
             >
               <Card

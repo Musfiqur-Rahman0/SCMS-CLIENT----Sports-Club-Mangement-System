@@ -1,13 +1,19 @@
 import React from "react";
 import aboutImage from "../../../../src/assets/Images/aboutImage.jpeg";
 import WhatDefineUs from "@/components/Defenation/WhatDefineUs";
+import { motion } from "motion/react";
 
 const AboutClub = () => {
   return (
     <section>
       <div className=" py-5 px-8 grid md:grid-cols-2 gap-8 items-center">
         <img src={aboutImage} alt="About" className="w-full rounded " />
-        <div className="space-y-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="space-y-4"
+        >
           <h2 className="title ">About Our Club</h2>
           <p className="subtitle ">
             Founded in 1998, Elite Sports Club has been a hub for passionate
@@ -18,7 +24,7 @@ const AboutClub = () => {
             Whether you love tennis, badminton, squash or want to join community
             events — we have it all!
           </p>
-        </div>
+        </motion.div>
       </div>
       <WhatDefineUs />
     </section>
