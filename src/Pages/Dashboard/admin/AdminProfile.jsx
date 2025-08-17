@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useCurd from "@/Hooks/useCurd";
 import ManageBookings from "./bookings/ManageBookings";
+import DashboardStats from "@/components/Dashboard/DashboardStats/DashboardStats ";
 
 export default function AdminProfile({ user }) {
   const { read } = useCurd("/admin-stats", ["admin"]);
@@ -24,7 +25,7 @@ export default function AdminProfile({ user }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+      {/* <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         {isPending ? (
           <p>loading adminStats...</p>
         ) : (
@@ -71,7 +72,9 @@ export default function AdminProfile({ user }) {
             </Card>
           </>
         )}
-      </div>
+      </div> */}
+
+      <DashboardStats data={adminStats} />
 
       <div className="w-full hidden md:block">
         <ManageBookings />
