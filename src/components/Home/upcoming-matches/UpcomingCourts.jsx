@@ -22,8 +22,10 @@ const UpcomingCourts = () => {
   } = useQuery({
     queryKey: ["courts"],
     queryFn: async () => {
-      const res = axios.get("http://localhost:3000/courts?page=1&limit=3");
-      return (await res).data;
+      const res = await axios.get(
+        "https://a12-server-rho.vercel.app/courts?page=1&limit=3"
+      );
+      return res.data;
     },
   });
 

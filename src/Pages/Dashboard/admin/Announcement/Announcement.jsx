@@ -67,8 +67,13 @@ export default function Announcements() {
   if (isError) return <p>Error loading announcements!</p>;
 
   return (
-    <section className="w-[95%]  mx-auto p-3 md:p-6">
-      <h2 className="text-2xl font-bold mb-6">📢 Announcements</h2>
+    <section className="w-[95%] max-w-7xl  mx-auto p-3 md:p-6">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold ">📢 Announcements</h2>
+        <p className="text-gray-500 text-sm">
+          Stay updated with the latest news, schedules, and notices.
+        </p>
+      </div>
 
       {announcements.length === 0 && (
         <p className="text-gray-500">No announcements available.</p>

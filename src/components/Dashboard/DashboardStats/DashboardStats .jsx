@@ -36,7 +36,7 @@ const DashboardStats = ({ data }) => {
   const COLORS = ["#3b82f6", "#22c55e", "#f59e0b"]; // blue, green, amber
 
   return (
-    <div className="p-6 space-y-8">
+    <div className="p-6 space-y-8 w-full">
       {/* --- Top Stat Cards --- */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="rounded-2xl shadow-md">
@@ -70,7 +70,7 @@ const DashboardStats = ({ data }) => {
       </div>
 
       {/* --- Bar Chart --- */}
-      <Card className="rounded-2xl shadow-md p-6">
+      <Card className="rounded-2xl shadow-md p-6 w-full">
         <h3 className="text-lg font-semibold mb-4">Overview (Comparison)</h3>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={barData}>

@@ -51,6 +51,14 @@ export default function Header() {
     });
   };
 
+  const pages = [
+    { id: "01", name: "Home", path: "/" },
+    { id: "02", name: "Courts", path: "/courts" },
+    // { id: "03", name: "Contact Us", path: "/contact" },
+    { id: "03", name: "Support", path: "/support" },
+    { id: "03", name: "Announcement", path: "/announcements" },
+  ];
+
   return (
     <header className="fixed top-0 left-0 right-0 z-20 bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
@@ -70,12 +78,11 @@ export default function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-4">
-          <Link to="/" className="text-gray-700 hover:text-black">
-            Home
-          </Link>
-          <Link to="/courts" className="text-gray-700 hover:text-black">
-            Courts
-          </Link>
+          {pages.map((page) => (
+            <Link to={page.path} className="text-gray-700 hover:text-black">
+              {page.name}
+            </Link>
+          ))}
 
           {isLoading ? (
             <Skeleton className="h-10 w-10 rounded-full animate-pulse" />

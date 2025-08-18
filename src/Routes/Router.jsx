@@ -34,6 +34,8 @@ import Profile from "@/Pages/Shared/Profile";
 import { createBrowserRouter } from "react-router";
 import PrivetRoute from "./PrivetRoute";
 import ForbiddenPage from "@/Pages/Forbidden/ForbiddenPage";
+import Contact from "@/Pages/Contact/Contact";
+import Support from "@/Pages/support/Support";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +54,18 @@ const router = createBrowserRouter([
       {
         path: "/forbidden",
         element: <ForbiddenPage />,
+      },
+      {
+        path: "announcements",
+        element: <Announcement />,
+      },
+      {
+        path: "/support",
+        element: <Support />,
+      },
+      {
+        path: "/contact",
+        element: <Contact />,
       },
     ],
   },

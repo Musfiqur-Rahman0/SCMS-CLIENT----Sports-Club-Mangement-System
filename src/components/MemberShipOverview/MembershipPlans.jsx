@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TiTick } from "react-icons/ti";
+import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 
 const membershipPlans = [
   {
@@ -49,6 +51,17 @@ const membershipPlans = [
 ];
 
 export default function MembershipPlans() {
+  const navigate = useNavigate();
+
+  const hanldeJoinNow = () => {
+    navigate("/courts");
+    Swal.fire(
+      "Membership info",
+      "Please book a court and you will became a member after admin approval",
+      "info"
+    );
+  };
+
   return (
     <section className="py-16 bg-gradient-to-b from-white to-gray-50">
       <div className="w-full px-4">
@@ -102,7 +115,10 @@ export default function MembershipPlans() {
                   </ul>
                 </CardContent>
                 <CardFooter>
-                  <Button className="w-full  text-white rounded-full">
+                  <Button
+                    onClick={hanldeJoinNow}
+                    className="w-full  text-white rounded-full"
+                  >
                     Join Now
                   </Button>
                 </CardFooter>

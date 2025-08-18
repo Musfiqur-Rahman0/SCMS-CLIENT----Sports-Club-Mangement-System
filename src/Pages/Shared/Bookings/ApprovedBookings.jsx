@@ -79,8 +79,6 @@ export default function ApprovedBookings() {
     });
   };
 
-  console.log(data);
-
   const headItems = [
     "#",
     "User Name",
